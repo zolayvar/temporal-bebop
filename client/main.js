@@ -1,22 +1,8 @@
 import angular from 'angular';
 import angularMeteor from 'angular-meteor';
-import template from './stuff.html';
+import nameHereList from './stuff';
 
-class NameHereListCtrl {
-	constructor() {
-		this.tasks = [
-			{text: 'This is task 1'},
-			{text: 'This is task 2'},
-			{text: 'This is task 3'}
-		];
-	}
-}
-
-export default angular.module('nameHere', [
-	angularMeteor
-])
-
-nameHere.component('nameHereList', {
-	templateUrl: 'stuff.html',
-	controller: NameHereListCtrl
-});
+angular.module('nameHere', [
+	angularMeteor,
+	nameHereList.name
+]);
