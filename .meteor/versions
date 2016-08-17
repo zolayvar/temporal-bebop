@@ -24,7 +24,7 @@ ddp-server@1.2.10
 deps@1.0.12
 diff-sequence@1.0.6
 ecmascript@0.5.7
-ecmascript-runtime@0.3.12
+ecmascript-runtime@0.3.13
 ejson@1.0.12
 es5-shim@4.6.13
 facebook@1.2.8
