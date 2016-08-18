@@ -1,17 +1,24 @@
-<header>
-	<h1>A list of your friends who are signed into the app</h1>
-</header>
+<md-toolbar>
+	<div class="md-toolbar-tools">
+		<h3 flex>Some text here</h3>
 
-<div ng-if="$ctrl.getUserName()">
-	{{$ctrl.getUserName()}}
-	<button id="logout"
-			ng-click="$ctrl.logout()">Logout</button>
-</div>
+		<div ng-if="$ctrl.getUserName()">
+			{{$ctrl.getUserName()}}
+			<button md-button
+					class="md-raised"
+					ng-click="$ctrl.logout()">Logout</button>
+		</div>
 
-<div ng-if="!$ctrl.getUserName()">
-	<button id="facebook-login"
-			class="btn btn-default"
-			ng-click="$ctrl.login()">
-		Login with Facebook
-	</button>
+		<div ng-if="!$ctrl.getUserName()">
+			<button md-button
+					class="md-raised"
+					ng-click="$ctrl.login()">
+				Login with Facebook
+			</button>
+		</div>
+	</div>
+</md-toolbar>
+
+<div layout-padding>
+
 </div>
