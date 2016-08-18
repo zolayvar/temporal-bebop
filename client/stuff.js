@@ -3,19 +3,6 @@ import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import fbgraph from 'fbgraph'
 
-class Facebook {
-    constructor(accessToken) {
-//this.graph = Npm.require("fbgraph")
-        this.accessToken = accessToken
-        fbgraph.setAccessToken(accessToken)
-    }
-
-    query(q) {
-       //return self.graph['get'](q)
-    }
-
-}
-
 class NameHereListCtrl {
 	constructor() {}
 
@@ -24,7 +11,7 @@ class NameHereListCtrl {
     }
 
     query(q) {
-        var data = Meteor.sync(function(done) {
+        var data = Meteor.async(function(done) {
             fbgraph.get(q, function(err, res) {
                            done(null, res);
                   });
@@ -47,6 +34,9 @@ class NameHereListCtrl {
 				throw new Meteor.Error("Facebook login failed");
             } else {
                 fbgraph.setAccessToken(that.getUser().accessToken)
+                fbgraph.get("me", function(err, res){
+                    console.log(res)
+                })
             }
 		});
 	}
