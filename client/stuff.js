@@ -17,7 +17,9 @@ class Facebook {
 }
 
 class NameHereListCtrl {
-	constructor() {}
+	constructor() {
+		this.friends = ['Paul Christiano', 'Katja Grace'];
+	}
 
     getUser() {
         return Meteor.user().services.facebook
