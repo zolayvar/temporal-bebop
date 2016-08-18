@@ -5,7 +5,6 @@ Meteor.startup(() => {
   // code to run on server at startup
 });
 
-
 Relations = new Mongo.Collection("relations")
 
 Meteor.methods({
@@ -25,10 +24,10 @@ Meteor.methods({
         })
         return result
     },
-    getFriends : function() {
-       fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
-       var result = Meteor.wrapAsync(fbgraph.get)('me/friends');
-       console.log(result);
-       return result;
-    }
+     getFriends : function() {
+     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+     	var result = Meteor.wrapAsync(fbgraph.get)('me/friends?fields=picture,name,link');
+     	console.log(result);
+     	return result;
+     }
 })

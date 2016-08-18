@@ -23,8 +23,15 @@
 		ng-click="$ctrl.getFriends()">Get my friends</button>
 
 <md-list>
-	<md-list-item ng-repeat="friend in $ctrl.friends">
-		<span flex>{{friend}}</span>
+	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
+		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;
+
+		<span flex>
+			<a ng-href="{{friend.link}}" target="_blank">
+				{{friend.name}}
+			</a>
+		</span>
+
 		Date<md-checkbox aria-label="date"></md-checkbox>
 		Normal hanging out<md-checkbox aria-label="date"></md-checkbox>
 		Non-romantic hanging out<md-checkbox aria-label="date"></md-checkbox>
