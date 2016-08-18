@@ -6,22 +6,29 @@ Meteor.startup(() => {
 });
 
 
-Test = new Mongo.Collection("test")
+Relations = new Mongo.Collection("relations")
 
 Meteor.methods({
-     testInsert : function({a, b}) {
-         Test.insert({"a":a, "b":b})
-     },
-     testGet : function({a}) {
-         return Test.findOne({"a":a})
-     },
-     id : function() {
-         return this.userId
-     },
-     getFriends : function() {
-     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
-     	var result = Meteor.wrapAsync(fbgraph.get)('me/friends');
-     	console.log(result);
-     	return result;
-     }
+    addRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id
+        Relations.insert({"senderId":senderId, "receiverId":receiverId, "type":type})
+    },
+    removeRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id
+        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
+    },
+    getRelations : function() {
+        var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id})
+        var result = []
+        cursor.forEach(function(item) {
+            result.push({"receiverId":item.receiverId, "type":item.type})
+        })
+        return result
+    },
+    getFriends : function() {
+       fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+       var result = Meteor.wrapAsync(fbgraph.get)('me/friends');
+       console.log(result);
+       return result;
+    }
 })
