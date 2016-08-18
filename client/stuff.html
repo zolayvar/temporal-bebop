@@ -19,13 +19,16 @@
 	</div>
 </md-toolbar>
 
+<button md-button
+		ng-click="$ctrl.getFriends()">Get my friends</button>
+
 <md-list>
 	<md-list-item ng-repeat="friend in $ctrl.friends">
 		<span flex>{{friend}}</span>
-		Date<md-checkbox></md-checkbox>
-		Normal hanging out<md-checkbox></md-checkbox>
-		Non-romantic hanging out<md-checkbox></md-checkbox>
-		Fuck<md-checkbox></md-checkbox>
-		Fight<md-checkbox></md-checkbox>
+		Date<md-checkbox aria-label="date"></md-checkbox>
+		Normal hanging out<md-checkbox aria-label="date"></md-checkbox>
+		Non-romantic hanging out<md-checkbox aria-label="date"></md-checkbox>
+		Fuck<md-checkbox aria-label="date"></md-checkbox>
+		Fight<md-checkbox aria-label="date"></md-checkbox>
 	</md-list-item>
 </md-list>
