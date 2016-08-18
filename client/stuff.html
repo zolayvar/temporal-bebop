@@ -2,8 +2,16 @@
 	<h1>A list of your friends who are signed into the app</h1>
 </header>
 
-<ul>
-	<li ng-repeat="task in $ctrl.tasks">
-		{{task.text}}
-	</li>
-</ul>
+<div ng-if="$ctrl.getUserName()">
+	{{$ctrl.getUserName()}}
+	<button id="logout"
+			ng-click="$ctrl.logout()">Logout</button>
+</div>
+
+<div ng-if="!$ctrl.getUserName()">
+	<button id="facebook-login"
+			class="btn btn-default"
+			ng-click="$ctrl.login()">
+		Login with Facebook
+	</button>
+</div>

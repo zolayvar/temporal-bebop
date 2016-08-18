@@ -3,12 +3,30 @@ import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 
 class NameHereListCtrl {
-	constructor() {
-		this.tasks = [
-			{text: 'This is task 1'},
-			{text: 'This is task 2'},
-			{text: 'This is task 3'}
-		];
+	constructor() {}
+
+	getUserName() {
+		if (!Meteor.user()) {
+			return '';
+		}
+
+		return Meteor.user().services.facebook.name;
+	}
+
+	login() {
+		Meteor.loginWithFacebook({}, function(err){
+			if (err) {
+				throw new Meteor.Error("Facebook login failed");
+			}
+		});
+	}
+
+	logout() {
+		Meteor.logout(function(err){
+            if (err) {
+                throw new Meteor.Error("Logout failed");
+            }
+        });
 	}
 }
 

@@ -4,5 +4,5 @@ import nameHereList from './stuff';
 
 angular.module('nameHere', [
 	angularMeteor,
-	nameHereList.name
+	nameHereList.name,
 ]);
