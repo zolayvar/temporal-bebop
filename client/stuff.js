@@ -5,16 +5,26 @@ import fbgraph from 'fbgraph';
 
 class NameHereListCtrl {
 	constructor() {
-		this.getFriends();
-	}
-
-    getFriends() {
-    	let that = this;
+		let that = this;
 		Meteor.call(
 			'getFriends', {},
 			function(err, result) {
 				that.friends = result.data;
 			});
+
+		this.relationTypes = [
+			{type: 'date', text: 'Date'},
+			{type: 'hangout', text: 'Normal hanging out'},
+			{type: 'nonerotic', text: 'Definitely not romance'},
+			{type: 'fuck', text: 'Fuck'},
+			{type: 'fight', text: 'Fight'},
+		];
+
+		this.getRelations();
+	}
+
+    getFriends() {
+    	return this.friends;
     }
 
 	getUserName() {
@@ -22,6 +32,40 @@ class NameHereListCtrl {
 			return '';
 		}
 		return Meteor.user().profile.name;
+	}
+
+	toggleRelation(receiverId, type) {
+		if (!this.relationExists(receiverId, type)) {
+			this.relations.push({receiverId: receiverId, type: type});
+			Meteor.call('addRelation', {receiverId: receiverId, type: type}, function(err) {
+				// uhhhh
+			});
+		} else {
+			var i = this.relations.findIndex(function(relation) {
+				return relation.receiverId == receiverId && relation.type == type;
+			});
+			this.relations.splice(i, 1);
+			Meteor.call('removeRelation', {receiverId: receiverId, type: type}, function(err) {
+				// uhhhh
+			});
+		}
+	}
+
+	getRelations() {
+		var that = this;
+		Meteor.call('getRelations', {}, function(err, result) {
+			that.relations = result;
+		});
+	}
+
+	relationExists(receiverId, type) {
+		if (!this.relations) {
+			return false;
+		}
+
+		return this.relations.some(function(relation) {
+			return relation.receiverId == receiverId && relation.type == type;
+		});
 	}
 
 	login() {

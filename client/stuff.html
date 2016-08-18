@@ -23,7 +23,7 @@
 		ng-click="$ctrl.getFriends()">Get my friends</button>
 
 <md-list>
-	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
+	<md-list-item ng-repeat="friend in $ctrl.getFriends()" layout-padding>
 		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;
 
 		<span flex>
@@ -32,10 +32,12 @@
 			</a>
 		</span>
 
-		Date<md-checkbox aria-label="date"></md-checkbox>
-		Normal hanging out<md-checkbox aria-label="date"></md-checkbox>
-		Non-romantic hanging out<md-checkbox aria-label="date"></md-checkbox>
-		Fuck<md-checkbox aria-label="date"></md-checkbox>
-		Fight<md-checkbox aria-label="date"></md-checkbox>
+		<span ng-repeat="relationType in $ctrl.relationTypes">
+			{{relationType.text}}
+			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+					ng-checked="$ctrl.relationExists(friend.id, relationType.type)"
+					aria-label="relationType"></md-checkbox>
+			&nbsp;&nbsp;
+		</span>
 	</md-list-item>
 </md-list>
