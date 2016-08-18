@@ -5,15 +5,15 @@ import fbgraph from 'fbgraph';
 
 class NameHereListCtrl {
 	constructor() {
-		var that = this;
-		this.friends = ['Paul Christiano', 'Katja Grace'];
+		this.getFriends();
 	}
 
     getFriends() {
+    	let that = this;
 		Meteor.call(
 			'getFriends', {},
 			function(err, result) {
-				console.log(result);
+				that.friends = result.data;
 			});
     }
 
@@ -21,7 +21,7 @@ class NameHereListCtrl {
 		if (!Meteor.user()) {
 			return '';
 		}
-		return Meteor.user().name
+		return Meteor.user().profile.name;
 	}
 
 	login() {
