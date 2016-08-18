@@ -16,6 +16,14 @@ class NameHereListCtrl {
         return Meteor.user().services.facebook
     }
 
+    getFriends() {
+		Meteor.call(
+			'getFriends', {},
+			function(err, result) {
+				console.log(result);
+			});
+    }
+
 	getUserName() {
 		if (!Meteor.user()) {
 			return '';
