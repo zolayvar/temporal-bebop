@@ -35,12 +35,17 @@ function processPair(id1, id2, type){
 
 Meteor.methods({
     registerEmail : function() {
-        //fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
-        //var email = Meteor.wrapAsync(fbgraph.get)('me?scope=email')
-        var userdata = Meteor.user().services.facebook
-        var doc = {"id":userdata.id, "email":userdata.email}
+        userdata = Meteor.user().services.facebook
+    	fbgraph.setAccessToken(userdata.accessToken)
+    	var result = Meteor.wrapAsync(fbgraph.get)('me?fields=email')
+        var doc = {"id":userdata.id, "email":result.email}
         console.log(doc)
         Emails.insert(doc)
+    },
+    getMe : function({s}) {
+    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+    	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
+    	return test()
     },
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;

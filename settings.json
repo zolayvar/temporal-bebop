@@ -1,0 +1,8 @@
+{
+  "galaxy.meteor.com": { 
+    "env": { 
+       "MONGO_URL": "mongodb://temporalbebop:fuckwho@ds015879.mlab.com:15879/temporalbebop",
+       "MAIL_URL":"smtp://postmaster%40mg.marblespuzzle.com:9d813d021cdf43af267c75bd18677035@smtp.mailgun.org:587"
+    } 
+  }
+}
