@@ -6,7 +6,7 @@ import fbgraph from 'fbgraph';
 class NameHereListCtrl {
 	constructor() {
 		this.getFriends();
-	}
+  }
 
     getFriends() {
     	let that = this;
@@ -25,9 +25,11 @@ class NameHereListCtrl {
 	}
 
 	login() {
-		Meteor.loginWithFacebook({requestPermissions: ['user_friends']}, function(err){
+		Meteor.loginWithFacebook({requestPermissions: ['user_friends', 'email']}, function(err){
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
+            } else {
+                Meteor.call("registerEmail")
             }
 		});
 	}
@@ -46,4 +48,4 @@ export default angular.module('nameHereList', [
 ]).component('nameHereList', {
 	templateUrl: '/client/stuff.html',
 	controller: NameHereListCtrl
-});
+})
