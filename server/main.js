@@ -5,18 +5,18 @@ Meteor.startup(() => {
   // code to run on server at startup
 });
 
-Relations = new Mongo.Collection("relations")
-Emails = new Mongo.Collection("email")
+Relations = new Mongo.Collection("relations");
+Emails = new Mongo.Collection("email");
 //Queue = new Mongo.Collection("queue")
 
 function reciprocates(senderId, receiverId, type) {
-    result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type})
-    console.log(result)
+    result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
+    console.log(result);
     return !(typeof result === undefined)
 }
 function get_email(id) {
-    var doc = Emails.findOne({"id":id})
-    return doc.email
+    var doc = Emails.findOne({"id":id});
+    return doc.email;
 }
 function processPair(id1, id2, type){
     Email.send({
@@ -43,27 +43,27 @@ Meteor.methods({
         Emails.insert(doc)
     },
     addRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id
-        doc = {"senderId":senderId, "receiverId":receiverId, "type":type}
-        Relations.insert(doc)
+        var senderId = Meteor.user().services.facebook.id;
+        doc = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        Relations.insert(doc);
         if (reciprocates(senderId, receiverId, type)) {
-            processPair(senderId, receiverId, type)
+            processPair(senderId, receiverId, type);
         }
     },
     removeRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id
-        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
+        var senderId = Meteor.user().services.facebook.id;
+        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type});
         //permute(doc).forEach(function (x){
         //    Queue.remove(x)
         //})
     },
     getRelations : function() {
-        var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id})
-        var result = []
+        var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
+        var result = [];
         cursor.forEach(function(item) {
-            result.push({"receiverId":item.receiverId, "type":item.type})
+            result.push({"receiverId":item.receiverId, "type":item.type});
         })
-        return result
+        return result;
     },
     getFriends : function() {
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
