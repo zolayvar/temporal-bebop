@@ -16,11 +16,13 @@ function get_email(id) {
     return doc.email;
 }
 function processPair(id1, id2, type){
+    email1 = get_email(id1)
+    email2 = get_email(id2)
     Email.send({
-        cc: [get_email(id1), get_email(id2)],
+        cc: [email1, email2],
         from:"matchmaker@marblespuzzle.com",
         subject:"Test email",
-        text:"This is a test!"
+        text:email1 + " and " + email2 + " should " + type,
     })
 }
 //function permute(doc) {
@@ -56,7 +58,7 @@ Meteor.methods({
     },
     removeRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
-        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type});
+        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
         //permute(doc).forEach(function (x){
         //    Queue.remove(x)
         //})
