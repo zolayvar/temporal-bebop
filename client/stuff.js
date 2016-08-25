@@ -67,14 +67,6 @@ class ListCtrl {
 		}
 	}
 
-	// getRelations() {
-	// 	this.relations = [];
-	// 	// var that = this;
-	// 	// Meteor.call('getRelations', {}, function(err, result) {
-	// 	// 	that.relations = result;
-	// 	// });
-	// }
-
 	relationExists(receiverId, type) {
 		if (!this.relations) {
 			return false;

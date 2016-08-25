@@ -4,7 +4,7 @@ import list from './stuff';
 import ngMaterial from 'angular-material';
 
 
-angular.module('nameHere', [
+angular.module('temporalBebop', [
 	angularMeteor,
 	list.name,
 	ngMaterial,
