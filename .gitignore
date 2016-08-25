@@ -1,4 +1,5 @@
 node_modules/
 server/social-config.js
+settings.json
 *.swp
 *~

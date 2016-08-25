@@ -1,20 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
+import { Relations, Friends, Emails } from '../both/collections.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
 });
 
-Relations = new Mongo.Collection("relations");
-Emails = new Mongo.Collection("email");
-//Queue = new Mongo.Collection("queue")
-
 function reciprocates(senderId, receiverId, type) {
     var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
-    console.log(result);
     var reciprocated = !(typeof result == 'undefined')
-    console.log(reciprocated)
-    console.log(typeof result)
     return reciprocated
 }
 function get_email(id) {
@@ -74,8 +68,16 @@ Meteor.methods({
         return result;
     },
     getFriends : function() {
-    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+        var user = Meteor.user().services.facebook
+    	fbgraph.setAccessToken(user.accessToken);
     	var result = Meteor.wrapAsync(fbgraph.get)('me/friends?fields=picture,name,link');
+        result["data"].forEach(function (datum){
+            datum["senderId"]=user.id,
+            var selector = {}
+            selector["senderId"] = datum["senderId"]
+            selector["id"] = datum["id"]
+            Friends.upsert(selector, datum)
+        }
     	return result;
     }
 })
