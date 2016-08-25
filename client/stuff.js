@@ -52,15 +52,10 @@ class ListCtrl {
 
 	toggleRelation(receiverId, type) {
 		if (!this.relationExists(receiverId, type)) {
-			this.relations.push({receiverId: receiverId, type: type});
 			Meteor.call('addRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
 		} else {
-			var i = this.relations.findIndex(function(relation) {
-				return relation.receiverId == receiverId && relation.type == type;
-			});
-			this.relations.splice(i, 1);
 			Meteor.call('removeRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
