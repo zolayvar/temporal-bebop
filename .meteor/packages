@@ -22,3 +22,4 @@ accounts-facebook
 service-configuration
 meteorhacks:async
 email
+session

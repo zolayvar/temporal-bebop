@@ -2,15 +2,20 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import fbgraph from 'fbgraph';
+import { Mongo } from 'meteor/mongo';
+import { Friends } from '../both/relations.collection.js';
+import { Session } from 'meteor/session';
 
-class NameHereListCtrl {
-	constructor() {
-		let that = this;
-		Meteor.call(
-			'getFriends', {},
-			function(err, result) {
-				that.friends = result.data;
-			});
+
+class ListCtrl {
+	constructor($scope) {
+		$scope.viewModel(this);
+
+		this.helpers({
+	      friends() {
+	        return Friends.find({senderId: this.getFacebookId()});
+	      }
+	    });
 
 		this.relationTypes = [
 			{type: 'date', text: 'Date'},
@@ -19,19 +24,20 @@ class NameHereListCtrl {
 			{type: 'fuck', text: 'Fuck'},
 			{type: 'fight', text: 'Fight'},
 		];
-
-		this.getRelations();
 	}
-
-    getFriends() {
-    	return this.friends;
-    }
 
 	getUserName() {
 		if (!Meteor.user()) {
 			return '';
 		}
 		return Meteor.user().profile.name;
+	}
+
+	getFacebookId() {
+		if (!Meteor.user()) {
+			return '';
+		}
+		return Meteor.user().services.facebook.id;
 	}
 
 	toggleRelation(receiverId, type) {
@@ -51,12 +57,13 @@ class NameHereListCtrl {
 		}
 	}
 
-	getRelations() {
-		var that = this;
-		Meteor.call('getRelations', {}, function(err, result) {
-			that.relations = result;
-		});
-	}
+	// getRelations() {
+	// 	this.relations = [];
+	// 	// var that = this;
+	// 	// Meteor.call('getRelations', {}, function(err, result) {
+	// 	// 	that.relations = result;
+	// 	// });
+	// }
 
 	relationExists(receiverId, type) {
 		if (!this.relations) {
@@ -87,9 +94,10 @@ class NameHereListCtrl {
 	}
 }
 
-export default angular.module('nameHereList', [
+export default List = angular.module('List', [
 	angularMeteor
-]).component('nameHereList', {
+]).component('list', {
 	templateUrl: '/client/stuff.html',
-	controller: NameHereListCtrl
-})
+	controller: ['$scope', ListCtrl]
+});
+
