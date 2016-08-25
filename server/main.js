@@ -38,7 +38,6 @@ Meteor.methods({
     	fbgraph.setAccessToken(userdata.accessToken)
     	var result = Meteor.wrapAsync(fbgraph.get)('me?fields=email')
         var doc = {"id":userdata.id, "email":result.email}
-        console.log(doc)
         Emails.insert(doc)
     },
     getMe : function({s}) {
@@ -50,7 +49,6 @@ Meteor.methods({
         var senderId = Meteor.user().services.facebook.id;
         doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
             "senderMeteorId":Meteor.userId()};
-        console.log(Meteor.userId())
         Relations.insert(doc);
         if (reciprocates(senderId, receiverId, type)) {
             processPair(senderId, receiverId, type);
