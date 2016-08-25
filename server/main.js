@@ -72,12 +72,12 @@ Meteor.methods({
     	fbgraph.setAccessToken(user.accessToken);
     	var result = Meteor.wrapAsync(fbgraph.get)('me/friends?fields=picture,name,link');
         result["data"].forEach(function (datum){
-            datum["senderId"]=user.id,
-            var selector = {}
-            selector["senderId"] = datum["senderId"]
-            selector["id"] = datum["id"]
-            Friends.upsert(selector, datum)
-        }
+            datum["senderId"]=user.id;
+            var selector = {};
+            selector["senderId"] = datum["senderId"];
+            selector["id"] = datum["id"];
+            Friends.upsert(selector, datum);
+        })
     	return result;
     }
 })
