@@ -3,7 +3,7 @@ import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import fbgraph from 'fbgraph';
 import { Mongo } from 'meteor/mongo';
-import { Friends } from '../both/relations.collection.js';
+import { Friends, Relations } from '../both/collections.js';
 import { Session } from 'meteor/session';
 
 
@@ -17,6 +17,12 @@ class ListCtrl {
 	      }
 	    });
 
+		this.helpers({
+	      relations() {
+	        return Relations.find({senderId: this.getFacebookId()});
+	      }
+	    });
+
 		this.relationTypes = [
 			{type: 'date', text: 'Date'},
 			{type: 'hangout', text: 'Normal hanging out'},
@@ -24,6 +30,9 @@ class ListCtrl {
 			{type: 'fuck', text: 'Fuck'},
 			{type: 'fight', text: 'Fight'},
 		];
+
+		// Fetch my friends
+		Meteor.call('getFriends', {});
 	}
 
 	getUserName() {
