@@ -10,9 +10,12 @@ Emails = new Mongo.Collection("email");
 //Queue = new Mongo.Collection("queue")
 
 function reciprocates(senderId, receiverId, type) {
-    result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
+    var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
     console.log(result);
-    return !(typeof result === undefined)
+    var reciprocated = !(typeof result == 'undefined')
+    console.log(reciprocated)
+    console.log(typeof result)
+    return reciprocated
 }
 function get_email(id) {
     var doc = Emails.findOne({"id":id});
