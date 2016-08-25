@@ -46,7 +46,9 @@ Meteor.methods({
     },
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
-        doc = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
+            "senderMeteorId":Meteor.userId()};
+        console.log(Meteor.userId())
         Relations.insert(doc);
         if (reciprocates(senderId, receiverId, type)) {
             processPair(senderId, receiverId, type);
@@ -75,6 +77,7 @@ Meteor.methods({
             datum["senderId"]=user.id;
             var selector = {};
             selector["senderId"] = datum["senderId"];
+            selector["senderMeteorId"] = Meteor.userId()
             selector["id"] = datum["id"];
             Friends.upsert(selector, datum);
         })

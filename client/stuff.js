@@ -6,6 +6,8 @@ import fbgraph from 'fbgraph';
 class NameHereListCtrl {
 	constructor() {
 		let that = this;
+        Meteor.subscribe('friends')
+        Meteor.subscribe('relations')
 		Meteor.call(
 			'getFriends', {},
 			function(err, result) {
