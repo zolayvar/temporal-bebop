@@ -78,6 +78,7 @@ Meteor.methods({
             var selector = {};
             selector["senderId"] = datum["senderId"];
             selector["senderMeteorId"] = Meteor.userId()
+            datum["senderMeteorId"] = Meteor.userId()
             selector["id"] = datum["id"];
             Friends.upsert(selector, datum);
         })

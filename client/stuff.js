@@ -14,13 +14,13 @@ class ListCtrl {
 
 		this.helpers({
 	      friends() {
-	        return Friends.find({senderId: this.getFacebookId()});
+	        return Friends.find();
 	      }
 	    });
 
 		this.helpers({
 	      relations() {
-	        return Relations.find({senderId: this.getFacebookId()});
+	        return Relations.find();
 	      }
 	    });
 
@@ -44,7 +44,7 @@ class ListCtrl {
 	}
 
 	getFacebookId() {
-		if (!Meteor.user()) {
+		if (!Meteor.user() || !Meteor.user().services) {
 			return '';
 		}
 		return Meteor.user().services.facebook.id;
