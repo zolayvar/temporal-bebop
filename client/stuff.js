@@ -9,6 +9,7 @@ class ListCtrl {
 	constructor($scope) {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
+
 		$scope.viewModel(this);
 
 		this.helpers({
@@ -40,9 +41,12 @@ class ListCtrl {
 		];
 
 		// Fetch my friends
-		if (Meteor.user()) {
-			Meteor.call('getFriends', {});
-		}
+		var tryToGetFriends = setInterval(function() {
+			if (Meteor.user()) {
+				Meteor.call('getFriends', {});
+				clearInterval(tryToGetFriends);
+			}
+		}, 500);
 	}
 
 	getUserName() {
