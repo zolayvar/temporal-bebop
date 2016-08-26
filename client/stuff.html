@@ -20,6 +20,9 @@
 </md-toolbar>
 
 <md-list>
+	<md-list-item layout="row" layout-align="center center">
+		Selections are saved automatically. Emails are sent for mutual selections.&nbsp;&nbsp;
+	</md-list-item>
 	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
 		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;
 
@@ -30,11 +33,11 @@
 		</span>
 
 		<span ng-repeat="relationType in $ctrl.relationTypes">
+			&nbsp;&nbsp;
 			{{relationType.text}}
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
 					ng-checked="$ctrl.relationExists(friend.id, relationType.type)"
 					aria-label="relationType"></md-checkbox>
-			&nbsp;&nbsp;
 		</span>
 	</md-list-item>
 </md-list>
