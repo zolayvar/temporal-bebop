@@ -41,7 +41,9 @@ class ListCtrl {
 		];
 
 		// Fetch my friends
-		Meteor.call('getFriends', {});
+		if (Meteor.user()) {
+			Meteor.call('getFriends', {});
+		}
 	}
 
 	getUserName() {
