@@ -24,12 +24,20 @@ class ListCtrl {
 	      }
 	    });
 
+		// this.relationTypes = [
+		// 	{type: 'date', text: 'Date'},
+		// 	{type: 'hangout', text: 'Normal hanging out'},
+		// 	{type: 'nonerotic', text: 'Definitely not romance'},
+		// 	{type: 'fuck', text: 'Fuck'},
+		// 	{type: 'fight', text: 'Fight'},
+		// ];
+
 		this.relationTypes = [
-			{type: 'date', text: 'Date'},
-			{type: 'hangout', text: 'Normal hanging out'},
-			{type: 'nonerotic', text: 'Definitely not romance'},
-			{type: 'fuck', text: 'Fuck'},
-			{type: 'fight', text: 'Fight'},
+			{type: 'a', text: 'Play hotseat'},
+			{type: 'b', text: 'Arm wrestle'},
+			{type: 'c', text: 'Become nemesis'},
+			{type: 'd', text: 'Marry'},
+			{type: 'e', text: 'Fight'},
 		];
 
 		// Fetch my friends
@@ -77,7 +85,8 @@ class ListCtrl {
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
             } else {
-                Meteor.call("registerEmail")
+                Meteor.call("registerEmail");
+				Meteor.call('getFriends', {});
             }
 		});
 	}
