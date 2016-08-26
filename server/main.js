@@ -72,15 +72,24 @@ Meteor.methods({
     getFriends : function() {
         var user = Meteor.user().services.facebook
     	fbgraph.setAccessToken(user.accessToken);
+        var goget = function(s) {
+            fbgraph.get(s, function(err, res) {
+                if (res.paging && res.paging.next) {
+                    goget(res.paging.next)
+                }
+                res["data"].forEach(function(datum){
+                    datum["senderId"]=user.id;
+                    var selector = {};
+                    selector["senderId"] = datum["senderId"];
+                    selector["senderMeteorId"] = Meteor.userId()
+                    datum["senderMeteorId"] = Meteor.userId()
+                    selector["id"] = datum["id"];
+                    Friends.upsert(selector, datum);
+                })
+            });
+        }
     	var result = Meteor.wrapAsync(fbgraph.get)('me/friends?fields=picture,name,link');
         result["data"].forEach(function (datum){
-            datum["senderId"]=user.id;
-            var selector = {};
-            selector["senderId"] = datum["senderId"];
-            selector["senderMeteorId"] = Meteor.userId()
-            datum["senderMeteorId"] = Meteor.userId()
-            selector["id"] = datum["id"];
-            Friends.upsert(selector, datum);
         })
     	return result;
     }

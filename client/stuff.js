@@ -1,7 +1,6 @@
 import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
-import fbgraph from 'fbgraph';
 import { Mongo } from 'meteor/mongo';
 import { Friends, Relations } from '../both/collections.js';
 import { Session } from 'meteor/session';
