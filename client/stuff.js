@@ -5,10 +5,31 @@ import { Mongo } from 'meteor/mongo';
 import { Friends, Relations } from '../both/collections.js';
 import { Session } from 'meteor/session';
 
+Meteor.methods({
+    addRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id;
+        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
+            "senderMeteorId":Meteor.userId()};
+        Relations.insert(doc);
+        if (!this.isSimulation){
+            if (reciprocates(senderId, receiverId, type)) {
+                processPair(senderId, receiverId, type);
+            }
+        }
+    },
+    removeRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id;
+        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
+        //permute(doc).forEach(function (x){
+        //    Queue.remove(x)
+        //})
+    },
+})
 class ListCtrl {
 	constructor($scope) {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
+        Meteor.subscribe("getUserData")
 		$scope.viewModel(this);
 
 		this.helpers({
@@ -60,15 +81,15 @@ class ListCtrl {
 	}
 
 	toggleRelation(receiverId, type) {
-		if (!this.relationExists(receiverId, type)) {
-			Meteor.call('addRelation', {receiverId: receiverId, type: type}, function(err) {
-				// uhhhh
-			});
-		} else {
+		if (this.relationExists(receiverId, type)) {
 			Meteor.call('removeRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
-		}
+		} else{
+			Meteor.call('addRelation', {receiverId: receiverId, type: type}, function(err) {
+				// uhhhh
+			});
+		} 
 	}
 
 	relationExists(receiverId, type) {

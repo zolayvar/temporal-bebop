@@ -17,4 +17,22 @@ if (Meteor.isServer) {
         senderMeteorId: this.userId
     })
   });
+  Meteor.publish("getUserData", function () {
+    return Meteor.users.find({_id: this.userId});
+  });
 }
+
+Relations.allow({
+    insert: function (userId, doc) {
+        console.log("inserting???")
+        return Meteor.users().services.facebook.id === doc.senderId
+    },
+    remove: function (userId, doc) {
+        console.log("removing???")
+        return Meteor.users().services.facebook.id === doc.senderId
+    },
+    update: function (userId, doc) {
+        return Meteor.users().services.facebook.id === doc.senderId
+    }
+})
+

@@ -92,5 +92,5 @@ Meteor.methods({
         result["data"].forEach(function (datum){
         })
     	return result;
-    }
+    },
 })

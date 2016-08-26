@@ -22,3 +22,4 @@ service-configuration
 meteorhacks:async
 email
 session
+force-ssl
