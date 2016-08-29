@@ -63,7 +63,7 @@ class ListCtrl {
 
 		// Fetch my friends
 		var tryToGetFriends = setInterval(function() {
-			if (Meteor.user()) {
+			if (Meteor.user() && Meteor.user().profile) {
 				Meteor.call('getFriends', {});
 				clearInterval(tryToGetFriends);
 			}
