@@ -70,14 +70,23 @@ Meteor.methods({
         return result;
     },
     getFriends : function() {
+        if (!(Meteor.user() && Meteor.user().services)) {
+            return false;
+        }
         var user = Meteor.user().services.facebook
     	fbgraph.setAccessToken(user.accessToken);
         var goget = function(s) {
-            fbgraph.get(s, function(err, res) {
+            fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
+                console.log('a');
                 if (res.paging && res.paging.next) {
                     goget(res.paging.next)
                 }
-                res["data"].forEach(function(datum){
+
+                console.log('b');
+                for (var i = 0; i < res["data"].length; i++) {
+                    var datum = res["data"][i];
+
+                console.log(datum);
                     datum["senderId"]=user.id;
                     datum["senderMeteorId"] = Meteor.userId()
 
@@ -87,12 +96,10 @@ Meteor.methods({
                     selector["id"] = datum["id"];
 
                     Friends.upsert(selector, datum);
-                })
-            });
+                }
+            }));
         }
-    	var result = Meteor.wrapAsync(fbgraph.get)('me/friends?fields=picture,name,link');
-        result["data"].forEach(function (datum){
-        })
-    	return result;
-    },
+        goget('me/friends?fields=picture,name,link');
+    	return true;
+    }
 })

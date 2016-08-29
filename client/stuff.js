@@ -61,13 +61,14 @@ class ListCtrl {
 			{type: 'e', text: 'Fight'},
 		];
 
-		// Fetch my friends
-		var tryToGetFriends = setInterval(function() {
-			if (Meteor.user() && Meteor.user().profile) {
-				Meteor.call('getFriends', {});
-				clearInterval(tryToGetFriends);
-			}
-		}, 500);
+		var tryToGetFriends = function() {
+			Meteor.call('getFriends', {}, function(err, resp) {
+				if (!resp) {
+					setTimeout(tryToGetFriends, 500);
+				}
+			});
+		};
+		tryToGetFriends();
 	}
 
 	getUserName() {
@@ -93,7 +94,7 @@ class ListCtrl {
 			Meteor.call('addRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
-		} 
+		}
 	}
 
 	relationExists(receiverId, type) {
