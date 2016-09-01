@@ -54,11 +54,8 @@ class ListCtrl {
 		// ];
 
 		this.relationTypes = [
-			{type: 'a', text: 'Play hotseat'},
-			{type: 'b', text: 'Arm wrestle'},
-			{type: 'c', text: 'Become nemesis'},
-			{type: 'd', text: 'Marry'},
-			{type: 'e', text: 'Fight'},
+			{type: 'go on a date or something', text: 'Go on a date or something'},
+			{type: 'hang out soon', text: 'Hang out soon'},
 		];
 
 		var tryToGetFriends = function() {
