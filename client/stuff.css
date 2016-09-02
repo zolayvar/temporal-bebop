@@ -1,0 +1,14 @@
+
+
+md-checkbox.is-checked .md-icon {
+	background-color: blue !important;
+}
+
+.needs-saving.is-checked .md-icon,
+.needs-saving .md-icon {
+	background-color: lightblue !important;
+}
+
+.submit-needed {
+	background-color: lightblue !important;
+}

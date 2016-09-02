@@ -124,7 +124,7 @@ class ListCtrl {
 	}
 
 	toggleRelation(receiverId, type) {
-		if (this.relationExists(receiverId, type)) {
+		if (this.getRelation(receiverId, type)) {
 			Meteor.call('removeRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
@@ -145,11 +145,34 @@ class ListCtrl {
 		});
 	}
 
-	relationExists(receiverId, type) {
-		if (this.getRelation(receiverId, type)) {
+	shouldBeChecked(receiverId, type) {
+		var relation = this.getRelation(receiverId, type);
+
+		return relation && !relation.to_remove;
+	}
+
+	needsSaving(receiverId, type) {
+		var relation = this.getRelation(receiverId, type);
+
+		if ((relation && !relation.published) ||
+			(relation && relation.published && relation.to_remove)) {
+			this.somethingNeedsSaving = true;
 			return true;
 		}
 		return false;
+	}
+
+	doesSomethingNeedSaving() {
+		var that = this;
+		var result = false;
+		this.friends.forEach(function(friend) {
+			that.relationTypes.forEach(function(relationType) {
+				if (that.needsSaving(friend.id, relationType.type)) {
+					result = true;
+				}
+			});
+		});
+		return result;
 	}
 
 	setNote(noteText) {

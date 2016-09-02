@@ -38,11 +38,16 @@
 				{{relationType.text}}
 				&nbsp;
 				<span class="md-caption">
-					reciprocated: {{$ctrl.getRelation(friend.id, relationType.type).isReciprocated}}
+					<!-- needsSaving: {{$ctrl.needsSaving(friend.id, relationType.type)}}
+					relation: {{$ctrl.getRelation(friend.id, relationType.type)}} -->
 				</span>
 			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
-					ng-checked="$ctrl.relationExists(friend.id, relationType.type)"
+					ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
+					ng-class="{
+							'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
+							'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type)
+						}"
 					aria-label="relationType"></md-checkbox>
 		</span>
 	</md-list-item>
@@ -63,7 +68,10 @@
   	</md-button>
 
     <span flex></span>
-    <md-button class="md-raised md-primary" aria-label="Submit" ng-click="$ctrl.submitSelections()">
+    <md-button class="md-raised md-primary"
+    		aria-label="Submit"
+    		ng-click="$ctrl.submitSelections()"
+    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
       	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;
