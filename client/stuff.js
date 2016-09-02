@@ -4,6 +4,8 @@ import template from './stuff.html';
 import { Mongo } from 'meteor/mongo';
 import { Friends, Relations, Notes } from '../both/collections.js';
 
+relations = Relations;
+
 //XXX
 //These should only need to be written once...
 //I don't remember why this caused a problem before, probably some dumb reason
@@ -113,14 +115,21 @@ class ListCtrl {
 		}
 	}
 
-	relationExists(receiverId, type) {
+	getRelation(receiverId, type) {
 		if (!this.relations) {
 			return false;
 		}
 
-		return this.relations.some(function(relation) {
+		return this.relations.find(function(relation) {
 			return relation.receiverId == receiverId && relation.type == type;
 		});
+	}
+
+	relationExists(receiverId, type) {
+		if (this.getRelation(receiverId, type)) {
+			return true;
+		}
+		return false;
 	}
 
 	login() {
