@@ -112,10 +112,14 @@ Meteor.methods({
     	return result
     },
     addRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
-        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
-            "senderMeteorId":Meteor.userId(), "published":false, "to_remove":false};
+        let senderId = Meteor.user().services.facebook.id;
+        let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        let doc = {
+            $set: {"senderId":senderId, "receiverId":receiverId,
+            "type":type,
+            "senderMeteorId":Meteor.userId(),
+            "published":false, "to_remove":false}
+        };
         Relations.upsert(selector, doc);
     },
     publishRelations : function() {

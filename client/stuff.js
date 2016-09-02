@@ -124,7 +124,7 @@ class ListCtrl {
 	}
 
 	toggleRelation(receiverId, type) {
-		if (this.getRelation(receiverId, type)) {
+		if (this.shouldBeChecked(receiverId, type)){
 			Meteor.call('removeRelation', {receiverId: receiverId, type: type}, function(err) {
 				// uhhhh
 			});
@@ -154,7 +154,7 @@ class ListCtrl {
 	needsSaving(receiverId, type) {
 		var relation = this.getRelation(receiverId, type);
 
-		if ((relation && !relation.published) ||
+		if ((relation && !relation.published && !relation.to_remove) ||
 			(relation && relation.published && relation.to_remove)) {
 			this.somethingNeedsSaving = true;
 			return true;
