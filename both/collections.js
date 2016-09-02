@@ -23,7 +23,6 @@ if (Meteor.isServer) {
           return this.ready()
       }
       senderId = userdata.id;
-      console.log(senderId);
       return LastReciprocated.find({
           senderId: senderId
       })

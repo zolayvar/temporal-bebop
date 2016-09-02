@@ -8,7 +8,7 @@ Meteor.startup(() => {
 
 function updateOnReciprocation(senderId, receiverId, type){
     let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
-    Relations.remove(selector);
+    //Relations.remove(selector);
     let doc = {"senderId":senderId, "receiverId":receiverId, "type":type, "datetime":Date()}
     LastReciprocated.upsert(selector, doc)
 }
@@ -102,10 +102,14 @@ Meteor.methods({
         var doc = Notes.findOne({"id":id});
         return doc["note"]
     },
+    getPicture : function() {
+    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+    	return Meteor.wrapAsync(fbgraph.get)('me?fields=picture' + s).picture
+    }
     getMe : function({s}) {
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
     	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
-    	return test()
+    	return result
     },
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
