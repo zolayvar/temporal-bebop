@@ -20,19 +20,17 @@
 </md-toolbar>
 
 <md-list>
-	<md-list-item layout="row" layout-align="center center">
-		Selections are saved automatically. Emails are sent for mutual selections.&nbsp;&nbsp;
-	</md-list-item>
 	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
 		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;
 
-		<span flex>
+		<span layout="column" flex>
 			<a ng-href="{{friend.link}}" target="_blank">
 				{{friend.name}}
 			</a>
+	        <span class="md-caption" flex>{{$ctrl.getNote(friend.id)}}</span>
 		</span>
 
-        <span align=center> {{$ctrl.getNote(friend.id)}} </span>
+		&nbsp;&nbsp;
 
 		<span ng-repeat="relationType in $ctrl.relationTypes" layout="row">
 			&nbsp;&nbsp;
@@ -58,10 +56,15 @@
 <br>
 
 <div class="bottom-bar md-whiteframe-1dp">
-  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white;">
+  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px;">
+	<input ng-model="$ctrl.myNoteText" placeholder="Say something under your name?" style="width:400px; font:16px;">
+  	<md-button class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+  		Save
+  	</md-button>
+
     <span flex></span>
     <md-button class="md-raised md-primary" aria-label="Submit">
-      Submit
+      	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;
   </div>

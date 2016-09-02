@@ -40,7 +40,7 @@ Meteor.methods({
         var doc = {"id":userdata.id, "email":result.email}
         Emails.insert(doc)
     },
-    setNote : function({id, note}) {
+    setNote : function({note}) {
         var id = Meteor.user().services.facebook.id;
         var selector = {"id":id};
         var datum = {"id":id, "note":note};

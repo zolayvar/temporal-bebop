@@ -21,7 +21,8 @@ if (Meteor.isServer) {
       friend_docs.forEach(function(doc) {
           friends.push(doc["id"])
       })
-      return Notes.find({"id": 1087045104666577})//{$in: friends}})
+      friends.push(this.userId);
+      return Notes.find({"id": {$in: friends}});
   });
   Meteor.publish('relations', function publishRelations() {
     return Relations.find({
