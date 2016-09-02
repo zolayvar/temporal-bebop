@@ -89,6 +89,10 @@ class ListCtrl {
 
     }
 
+    submitSelections() {
+        Meteor.call("publishRelations")
+    }
+
 	getUserName() {
 		if (!Meteor.user()) {
 			return '';

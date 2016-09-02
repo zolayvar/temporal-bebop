@@ -30,22 +30,15 @@ function checkAndProcessReciprocity(senderId, receiverId, type){
 
 function reciprocates(senderId, receiverId, type) {
     var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
+    console.log("checking reciprocation...")
+    console.log(result)
     var reciprocated = !(typeof result == 'undefined') && (result.published === true)
+    console.log(reciprocated)
     return reciprocated
 }
 function getEmail(id) {
     var doc = Emails.findOne({"id":id});
     return doc.email;
-}
-function processPair(id1, id2, type){
-    email1 = getEmail(id1)
-    email2 = getEmail(id2)
-    Email.send({
-        cc: [email1, email2],
-        from:"matchmaker@reciprocity.io",
-        subject:"Test email",
-        text:email1 + " and " + email2 + " should " + type,
-    })
 }
 //function permute(doc) {
 //    newDoc = doc
@@ -87,16 +80,17 @@ Meteor.methods({
     publishRelations : function() {
         let senderId = Meteor.user().services.facebook.id;
         Relations.remove(
-            {"senderMeteorId":Meteor.userId(), "to_remove":true}
+            {"senderId":senderId, "to_remove":true}
         );
         let updated_relations = Relations.find(
-            {"senderMeteorId":Meteor.userId(), "published":false}
+            {"senderId":senderId, "published":false}
         );
         Relations.update(
-            {"senderMeteorId":Meteor.userId(), "published":false},
+            {"senderId":senderId, "published":false},
             {$set: {"published":true}},
             {multi:true}
         );
+        console.log(updated_relations)
         updated_relations.forEach(function (doc){
             checkAndProcessReciprocity(senderId, doc.receiverId, doc.type)
         })
@@ -107,7 +101,6 @@ Meteor.methods({
             {"senderMeteorId":Meteor.userId(), "receiverId":receiverId, "type":type},
             {$set: {"to_remove":true}}
         )
-        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
     },
     getRelations : function() {
         var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
