@@ -15,8 +15,8 @@ function updateOnReciprocation(senderId, receiverId, type){
 
 function checkAndProcessReciprocity(senderId, receiverId, type){
     if (reciprocates(senderId, receiverId, type)) {
-        email1 = getEmail(id1);
-        email2 = getEmail(id2);
+        email1 = getEmail(senderId);
+        email2 = getEmail(receiverId);
         Email.send({
             cc: [email1, email2],
             from:"matchmaker@reciprocity.io",
@@ -84,7 +84,7 @@ Meteor.methods({
         );
         let updated_relations = Relations.find(
             {"senderId":senderId, "published":false}
-        );
+        ).fetch();
         Relations.update(
             {"senderId":senderId, "published":false},
             {$set: {"published":true}},
