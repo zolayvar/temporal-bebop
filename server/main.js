@@ -1,26 +1,48 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
-import { Relations, Friends, Emails, Notes } from '../both/collections.js'
+import { Relations, Friends, Emails, Notes, LastReciprocated } from '../both/collections.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
 });
 
+function updateOnReciprocation(senderId, receiverId, type){
+    let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
+    Relations.remove(selector);
+    let doc = {"senderId":senderId, "receiverId":receiverId, "type":type, "datetime":Date()}
+    LastReciprocated.upsert(selector, doc)
+}
+
+function checkAndProcessReciprocity(senderId, receiverId, type){
+    if (reciprocates(senderId, receiverId, type)) {
+        email1 = getEmail(id1);
+        email2 = getEmail(id2);
+        Email.send({
+            cc: [email1, email2],
+            from:"matchmaker@reciprocity.io",
+            subject:"Test email",
+            text:email1 + " and " + email2 + " should " + type,
+        })
+        updateOnReciprocation(senderId, receiverId, type)
+        updateOnReciprocation(receiverId, senderId, type)
+    }
+}
+
 function reciprocates(senderId, receiverId, type) {
     var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
-    var reciprocated = !(typeof result == 'undefined')
+    var reciprocated = !(typeof result == 'undefined') && (result.published === true)
     return reciprocated
 }
-function get_email(id) {
+function getEmail(id) {
     var doc = Emails.findOne({"id":id});
     return doc.email;
 }
 function processPair(id1, id2, type){
-    email1 = get_email(id1)
-    email2 = get_email(id2)
+    email1 = getEmail(id1)
+    email2 = getEmail(id2)
     Email.send({
         cc: [email1, email2],
-        from:"matchmaker@marblespuzzle.com",
+        from:"matchmaker@reciprocity.io",
         subject:"Test email",
         text:email1 + " and " + email2 + " should " + type,
     })
@@ -40,7 +62,7 @@ Meteor.methods({
         var doc = {"id":userdata.id, "email":result.email}
         Emails.insert(doc)
     },
-    setNote : function({id, note}) {
+    setNote : function({note}) {
         var id = Meteor.user().services.facebook.id;
         var selector = {"id":id};
         var datum = {"id":id, "note":note};
@@ -57,19 +79,35 @@ Meteor.methods({
     },
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
+        selector = {"senderId":senderId, "receiverId":receiverId, "type":type}
         doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
-            "senderMeteorId":Meteor.userId()};
-        Relations.insert(doc);
-        if (reciprocates(senderId, receiverId, type)) {
-            processPair(senderId, receiverId, type);
-        }
+            "senderMeteorId":Meteor.userId(), "published":false, "to_remove":false};
+        Relations.upsert(selector, doc);
+    },
+    publishRelations : function() {
+        let senderId = Meteor.user().services.facebook.id;
+        Relations.remove(
+            {"senderMeteorId":Meteor.userId(), "to_remove":true}
+        );
+        let updated_relations = Relations.find(
+            {"senderMeteorId":Meteor.userId(), "published":false}
+        );
+        Relations.update(
+            {"senderMeteorId":Meteor.userId(), "published":false},
+            {$set: {"published":true}},
+            {multi:true}
+        );
+        updated_relations.forEach(function (doc){
+            checkAndProcessReciprocity(senderId, doc.receiverId, doc.type)
+        })
     },
     removeRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
+        Relations.update(
+            {"senderMeteorId":Meteor.userId(), "receiverId":receiverId, "type":type},
+            {$set: {"to_remove":true}}
+        )
         Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
-        //permute(doc).forEach(function (x){
-        //    Queue.remove(x)
-        //})
     },
     getRelations : function() {
         var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
