@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
-import { Relations, Friends, Emails } from '../both/collections.js'
+import { Relations, Friends, Emails, Notes } from '../both/collections.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -40,6 +40,16 @@ Meteor.methods({
         var doc = {"id":userdata.id, "email":result.email}
         Emails.insert(doc)
     },
+    setNote : function({id, note}) {
+        var id = Meteor.user().services.facebook.id;
+        var selector = {"id":id};
+        var datum = {"id":id, "note":note};
+        Notes.upsert(selector, datum)
+    },
+    getNote : function({id}){
+        var doc = Notes.findOne({"id":id});
+        return doc["note"]
+    },
     getMe : function({s}) {
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
     	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
@@ -77,16 +87,13 @@ Meteor.methods({
     	fbgraph.setAccessToken(user.accessToken);
         var goget = function(s) {
             fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
-                console.log('a');
                 if (res.paging && res.paging.next) {
                     goget(res.paging.next)
                 }
 
-                console.log('b');
                 for (var i = 0; i < res["data"].length; i++) {
                     var datum = res["data"][i];
 
-                console.log(datum);
                     datum["senderId"]=user.id;
                     datum["senderMeteorId"] = Meteor.userId()
 

@@ -2,9 +2,11 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import { Mongo } from 'meteor/mongo';
-import { Friends, Relations } from '../both/collections.js';
-import { Session } from 'meteor/session';
+import { Friends, Relations, Notes } from '../both/collections.js';
 
+//XXX
+//These should only need to be written once...
+//I don't remember why this caused a problem before, probably some dumb reason
 Meteor.methods({
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
@@ -24,12 +26,20 @@ Meteor.methods({
         //    Queue.remove(x)
         //})
     },
+    setNote : function({id, note}) {
+        var id = Meteor.user().services.facebook.id;
+        var selector = {"id":id};
+        var datum = {"id":id, "note":note};
+        Notes.upsert(selector, datum)
+    }
 })
 class ListCtrl {
 	constructor($scope) {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
+        //XXX can probably remove getUserData?
         Meteor.subscribe("getUserData")
+        Meteor.subscribe("notes")
 
 		$scope.viewModel(this);
 
@@ -67,6 +77,15 @@ class ListCtrl {
 		};
 		tryToGetFriends();
 	}
+
+    getNote(id) {
+        var doc = Notes.findOne({id:id})
+        if (!doc) {
+            return '';
+        }
+        return doc.note
+
+    }
 
 	getUserName() {
 		if (!Meteor.user()) {

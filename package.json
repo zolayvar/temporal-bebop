@@ -1,5 +1,5 @@
 {
-  "name": "fuck-who",
+  "name": "reciprocity",
   "private": true,
   "scripts": {
     "start": "meteor run"
