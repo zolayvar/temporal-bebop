@@ -78,6 +78,8 @@ class ListCtrl {
 			});
 		};
 		tryToGetFriends();
+
+		this.myNoteText = this.getNote();
 	}
 
     getNote(id) {
@@ -86,7 +88,6 @@ class ListCtrl {
             return '';
         }
         return doc.note
-
     }
 
     submitSelections() {
@@ -98,6 +99,20 @@ class ListCtrl {
 			return '';
 		}
 		return Meteor.user().profile.name;
+	}
+
+	getUserPicture() {
+		if (!Meteor.user()) {
+			return '';
+		}
+		return Meteor.user().profile.facebook;
+	}
+
+	getUserLink() {
+		if (!Meteor.user()) {
+			return '';
+		}
+		return Meteor.user().service.facebook.link;
 	}
 
 	getFacebookId() {
@@ -134,6 +149,10 @@ class ListCtrl {
 			return true;
 		}
 		return false;
+	}
+
+	setNote(noteText) {
+		Meteor.call('setNote', {note: this.myNoteText});
 	}
 
 	login() {
