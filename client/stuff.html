@@ -32,9 +32,15 @@
 			</a>
 		</span>
 
-		<span ng-repeat="relationType in $ctrl.relationTypes">
+		<span ng-repeat="relationType in $ctrl.relationTypes" layout="row">
 			&nbsp;&nbsp;
-			{{relationType.text}}
+			<div layout="column">
+				{{relationType.text}}
+				&nbsp;
+				<span class="md-caption">
+					reciprocated: {{$ctrl.getRelation(friend.id, relationType.type).isReciprocated}}
+				</span>
+			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
 					ng-checked="$ctrl.relationExists(friend.id, relationType.type)"
 					aria-label="relationType"></md-checkbox>

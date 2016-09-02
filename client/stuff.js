@@ -5,6 +5,8 @@ import { Mongo } from 'meteor/mongo';
 import { Friends, Relations } from '../both/collections.js';
 import { Session } from 'meteor/session';
 
+relations = Relations;
+
 Meteor.methods({
     addRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
@@ -94,14 +96,21 @@ class ListCtrl {
 		}
 	}
 
-	relationExists(receiverId, type) {
+	getRelation(receiverId, type) {
 		if (!this.relations) {
 			return false;
 		}
 
-		return this.relations.some(function(relation) {
+		return this.relations.find(function(relation) {
 			return relation.receiverId == receiverId && relation.type == type;
 		});
+	}
+
+	relationExists(receiverId, type) {
+		if (this.getRelation(receiverId, type)) {
+			return true;
+		}
+		return false;
 	}
 
 	login() {
