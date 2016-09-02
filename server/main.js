@@ -105,7 +105,7 @@ Meteor.methods({
     getPicture : function() {
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
     	return Meteor.wrapAsync(fbgraph.get)('me?fields=picture' + s).picture
-    }
+    },
     getMe : function({s}) {
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
     	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
