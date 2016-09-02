@@ -40,6 +40,7 @@
 				<span class="md-caption">
 					<!-- needsSaving: {{$ctrl.needsSaving(friend.id, relationType.type)}}
 					relation: {{$ctrl.getRelation(friend.id, relationType.type)}} -->
+					lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime | relativeDateTime}}
 				</span>
 			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"

@@ -175,6 +175,17 @@ class ListCtrl {
 		return result;
 	}
 
+	lastReciprocated(receiverId, type) {
+		if (!Meteor.user() || !Meteor.user().services) {
+			return;
+		}
+		return LastReciprocated.find({
+			receiverId: receiverId,
+			senderId: Meteor.user().services.facebook.id,
+			type: type
+		}).fetch();
+	}
+
 	setNote(noteText) {
 		Meteor.call('setNote', {note: this.myNoteText});
 	}
