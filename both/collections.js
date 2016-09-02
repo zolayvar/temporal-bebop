@@ -1,15 +1,15 @@
 export const Relations = new Mongo.Collection("relations");
 export const LastReciprocated = new Mongo.Collection("lastReciprocated")
 export const Friends = new Mongo.Collection("friends");
-export const Emails = new Mongo.Collection("email");
+export const UserData = new Mongo.Collection("userdata");
 export const Notes = new Mongo.Collection("notes")
 
 //these definitions are just to make the variables available from the console
 relationsDB = Relations;
 friendsDB = Friends;
-emailsDB = Emails;
+userDataDB = UserData;
 notesDB = Notes;
-last_reciprocatedDB = LastReciprocated;
+lastReciprocatedDB = LastReciprocated;
 
 if (Meteor.isServer) {
   Meteor.publish('friends', function publishFriends() {
@@ -17,6 +17,17 @@ if (Meteor.isServer) {
         senderMeteorId: this.userId
     })
   });
+  Meteor.publish('lastReciprocated', function publishLastReciprocated() {
+      let userdata = UserData.findOne({"meteorId":this.userId});
+      if (!userdata) {
+          return this.ready()
+      }
+      senderId = userdata.id;
+      console.log(senderId);
+      return LastReciprocated.find({
+          senderId: senderId
+      })
+  })
   Meteor.publish('notes', function publishNotes() {
       var friendDocs = Friends.find({senderMeteorId: this.userId});
       var friends = []

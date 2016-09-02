@@ -2,7 +2,7 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import { Mongo } from 'meteor/mongo';
-import { Friends, Relations, Notes } from '../both/collections.js';
+import { Friends, Relations, Notes, LastReciprocated } from '../both/collections.js';
 
 relations = Relations;
 
@@ -42,6 +42,7 @@ class ListCtrl {
         //XXX can probably remove getUserData?
         Meteor.subscribe("getUserData")
         Meteor.subscribe("notes")
+        Meteor.subscribe("lastReciprocated")
 
 		$scope.viewModel(this);
 
@@ -160,8 +161,7 @@ class ListCtrl {
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
             } else {
-                Meteor.call("registerEmail");
-				Meteor.call('getFriends', {});
+                Meteor.call("registerUser");
             }
 		});
 	}

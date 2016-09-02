@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
-import { Relations, Friends, Emails, Notes, LastReciprocated } from '../both/collections.js'
+import { Relations, Friends, UserData, Notes, LastReciprocated } from '../both/collections.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -30,15 +30,20 @@ function checkAndProcessReciprocity(senderId, receiverId, type){
 
 function reciprocates(senderId, receiverId, type) {
     var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
-    console.log("checking reciprocation...")
-    console.log(result)
     var reciprocated = !(typeof result == 'undefined') && (result.published === true)
-    console.log(reciprocated)
     return reciprocated
 }
 function getEmail(id) {
-    var doc = Emails.findOne({"id":id});
-    return doc.email;
+    var doc = UserData.findOne({"id":id});
+    return doc.email
+}
+function getName(id) {
+    var doc = UserData.findOne({"id":id});
+    return doc.email
+}
+function getId(meteorId) {
+    var doc = UserData.findOne({"meteorId":meteorId});
+    return doc.id
 }
 //function permute(doc) {
 //    newDoc = doc
@@ -48,74 +53,21 @@ function getEmail(id) {
 //}
 
 Meteor.methods({
-    registerEmail : function() {
-        userdata = Meteor.user().services.facebook
-    	fbgraph.setAccessToken(userdata.accessToken)
-    	var result = Meteor.wrapAsync(fbgraph.get)('me?fields=email')
-        var doc = {"id":userdata.id, "email":result.email}
-        Emails.insert(doc)
-    },
-    setNote : function({note}) {
-        var id = Meteor.user().services.facebook.id;
-        var selector = {"id":id};
-        var datum = {"id":id, "note":note};
-        Notes.upsert(selector, datum)
-    },
-    getNote : function({id}){
-        var doc = Notes.findOne({"id":id});
-        return doc["note"]
-    },
-    getMe : function({s}) {
-    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
-    	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
-    	return test()
-    },
-    addRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        selector = {"senderId":senderId, "receiverId":receiverId, "type":type}
-        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
-            "senderMeteorId":Meteor.userId(), "published":false, "to_remove":false};
-        Relations.upsert(selector, doc);
-    },
-    publishRelations : function() {
-        let senderId = Meteor.user().services.facebook.id;
-        Relations.remove(
-            {"senderId":senderId, "to_remove":true}
-        );
-        let updated_relations = Relations.find(
-            {"senderId":senderId, "published":false}
-        ).fetch();
-        Relations.update(
-            {"senderId":senderId, "published":false},
-            {$set: {"published":true}},
-            {multi:true}
-        );
-        console.log(updated_relations)
-        updated_relations.forEach(function (doc){
-            checkAndProcessReciprocity(senderId, doc.receiverId, doc.type)
-        })
-    },
-    removeRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        Relations.update(
-            {"senderMeteorId":Meteor.userId(), "receiverId":receiverId, "type":type},
-            {$set: {"to_remove":true}}
-        )
-    },
-    getRelations : function() {
-        var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
-        var result = [];
-        cursor.forEach(function(item) {
-            result.push({"receiverId":item.receiverId, "type":item.type});
-        })
-        return result;
-    },
-    getFriends : function() {
+    registerUser : function() {
         if (!(Meteor.user() && Meteor.user().services)) {
             return false;
         }
         var user = Meteor.user().services.facebook
     	fbgraph.setAccessToken(user.accessToken);
+    	var data = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name')
+        var selector = {"id":user.id}
+        var doc = {
+            "id":user.id,
+            "email":data.email,
+            "name":data.name,
+            "meteorId":Meteor.userId()
+        }
+        UserData.upsert(selector, doc)
         var goget = function(s) {
             fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
                 if (res.paging && res.paging.next) {
@@ -139,5 +91,61 @@ Meteor.methods({
         }
         goget('me/friends?fields=picture,name,link');
     	return true;
+    },
+    setNote : function({note}) {
+        var id = Meteor.user().services.facebook.id;
+        var selector = {"id":id};
+        var datum = {"id":id, "note":note};
+        Notes.upsert(selector, datum)
+    },
+    getNote : function({id}){
+        var doc = Notes.findOne({"id":id});
+        return doc["note"]
+    },
+    getMe : function({s}) {
+    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
+    	var result = Meteor.wrapAsync(fbgraph.get)('me' + s)
+    	return test()
+    },
+    addRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id;
+        selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
+            "senderMeteorId":Meteor.userId(), "published":false, "to_remove":false};
+        Relations.upsert(selector, doc);
+    },
+    publishRelations : function() {
+        let senderId = Meteor.user().services.facebook.id;
+        Relations.remove(
+            {"senderId":senderId, "to_remove":true}
+        );
+        let updated_relations = Relations.find(
+            {"senderId":senderId, "published":false}
+        ).fetch();
+        Relations.update(
+            {"senderId":senderId, "published":false},
+            {$set: {"published":true}},
+            {multi:true}
+        );
+        updated_relations.forEach(function (doc){
+            checkAndProcessReciprocity(senderId, doc.receiverId, doc.type)
+        })
+    },
+    removeRelation : function({receiverId, type}) {
+        var senderId = Meteor.user().services.facebook.id;
+        Relations.update(
+            {"senderId":senderId, "receiverId":receiverId, "type":type},
+            {$set: {"to_remove":true}}
+        )
+    },
+    getRelations : function() {
+        var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
+        var result = [];
+        cursor.forEach(function(item) {
+            result.push({"receiverId":item.receiverId, "type":item.type});
+        })
+        return result;
+    },
+    getFriends : function() {
     }
 })
