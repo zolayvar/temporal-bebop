@@ -65,7 +65,8 @@
 					ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
 					ng-class="{
 							'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
-							'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type)
+							'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
+							'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
 						}"
 					aria-label="relationType"></md-checkbox>
 		</span>
