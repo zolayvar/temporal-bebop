@@ -128,7 +128,6 @@ Meteor.methods({
             "type":type, "reciprocated":false, "to_remove":true};
         let unremoved = Relations.update(unremoveSelector, {$set: {"to_remove":false}});
         if (unremoved == 0) {
-            Relations.update(selector)
             let selector = {"senderId":senderId, "receiverId":receiverId,
                 "type":type, "reciprocated":false};
             let doc = {
