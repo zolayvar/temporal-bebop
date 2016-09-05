@@ -40,7 +40,7 @@ function getEmail(id) {
     return doc.email
 }
 function getFirstName(id) {
-    return getName(id).spilt(" ")[0]
+    return getName(id).split(" ")[0]
 }
 function getName(id) {
     var doc = UserData.findOne({"id":id});
