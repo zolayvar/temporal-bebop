@@ -57,9 +57,9 @@
 			<div layout="column">
 				{{relationType.text}}
 				&nbsp;
-				<span class="md-caption">
+				<!--<span class="md-caption">
                     lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime}}
-				</span>
+                    </span>-->
 			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
 					ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"

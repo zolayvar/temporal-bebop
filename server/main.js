@@ -124,16 +124,22 @@ Meteor.methods({
     },
     addRelation : function({receiverId, type}) {
         let senderId = Meteor.user().services.facebook.id;
-        let selector = {"senderId":senderId, "receiverId":receiverId,
-            "type":type, "reciprocated":false};
-        let doc = {
-            $set: {"senderId":senderId, "receiverId":receiverId,
-            "type":type,
-            "senderMeteorId":Meteor.userId(),
-            "published":false, "to_remove":false, "reciprocated":false,
-            "alerted":false}
-        };
-        Relations.upsert(selector, doc);
+        let unremoveSelector = {"senderId":senderId, "receiverId":receiverId,
+            "type":type, "reciprocated":false, "to_remove":true};
+        let unremoved = Relations.update(unremoveSelector, {$set: {"to_remove":false}});
+        if (unremoved == 0) {
+            Relations.update(selector)
+            let selector = {"senderId":senderId, "receiverId":receiverId,
+                "type":type, "reciprocated":false};
+            let doc = {
+                $set: {"senderId":senderId, "receiverId":receiverId,
+                "type":type,
+                "senderMeteorId":Meteor.userId(),
+                "published":false, "to_remove":false, "reciprocated":false,
+                "alerted":false}
+            };
+            Relations.upsert(selector, doc);
+        }
     },
     publishRelations : function() {
         let senderId = Meteor.user().services.facebook.id;

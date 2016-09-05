@@ -23,7 +23,7 @@ Meteor.methods({
     },
     removeRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
-        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type})
+        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type, "reciprocated":false})
         //permute(doc).forEach(function (x){
         //    Queue.remove(x)
         //})
