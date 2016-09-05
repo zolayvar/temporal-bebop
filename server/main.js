@@ -21,9 +21,9 @@ function checkAndProcessReciprocity(senderId, receiverId, type){
         name2 = getName(receiverId);
         Email.send({
             cc: [email1, email2],
-            from:"matchmaker@reciprocity.io",
-            subject:"Test email",
-            text:name1 + " and " + name2 + " should " + type,
+            from:"meddler@reciprocity.io",
+            subject:"Your desires have been reciprocated",
+            text:"Dear " + name1 + " and " + name2 +",\n\nYou'd both like to " + type + ", consider responding to this thread to organize a time.\n\nYours,\nreciprocity.io",
         })
         updateOnReciprocation(senderId, receiverId, type)
         updateOnReciprocation(receiverId, senderId, type)
