@@ -37,9 +37,9 @@ Meteor.methods({
 })
 class ListCtrl {
 
-    subscribe() {
-        Meteor.subscribe('friends')
-        Meteor.subscribe('relations')
+    subscribeToDBs() {
+        Meteor.subscribe("friends")
+        Meteor.subscribe("relations")
         Meteor.subscribe("userData")
         Meteor.subscribe("meteorUserData")
         Meteor.subscribe("notes")
@@ -229,11 +229,11 @@ class ListCtrl {
 
 	login() {
         var that = this;
-		Meteor.loginWithFacebook({requestPermissions: ['user_friends', 'email']}, function(err){
+		Meteor.loginWithFacebook({requestPermissions: ['user_friends', 'email']}, function(err, resp){
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
             } else {
-                that.subscribe()
+                that.subscribeToDBs()
                 Meteor.call("registerUser");
             }
 		});
