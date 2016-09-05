@@ -10,7 +10,7 @@ md-checkbox.is-checked .md-icon {
 }
 
 .submit-not-needed {
-	background-color: grey !important;
+	background-color: lightgrey !important;
 }
 
 .submit-needed {
