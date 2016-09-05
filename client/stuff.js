@@ -2,7 +2,7 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import template from './stuff.html';
 import { Mongo } from 'meteor/mongo';
-import { Friends, Relations, Notes, LastReciprocated } from '../both/collections.js';
+import { Friends, Relations, Notes, LastReciprocated, UserData } from '../both/collections.js';
 
 relations = Relations;
 
@@ -42,6 +42,7 @@ class ListCtrl {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
         Meteor.subscribe("userData")
+        Meteor.subscribe("meteorUserData")
         Meteor.subscribe("notes")
         Meteor.subscribe("lastReciprocated")
 
