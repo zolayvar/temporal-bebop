@@ -100,6 +100,10 @@ class ListCtrl {
 		this.myNoteText = this.getNote();
 	}
 
+	getUserData() {
+		return UserData.findOne({id:this.getUserId()});
+	}
+
 	getMyNote() {
 		return this.getNote(this.getUserId());
 	}
