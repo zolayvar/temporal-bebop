@@ -1,6 +1,6 @@
 <md-toolbar>
 	<div class="md-toolbar-tools">
-        <h3 flex>{{$ctrl.existsRelation()}} This will fix everything, right?</h3>
+        <h3 flex>This will fix everything, right?</h3>
 
 		<div ng-if="$ctrl.getUserName()">
 			{{$ctrl.getUserName()}}
@@ -19,7 +19,7 @@
 	</div>
 </md-toolbar>
 
-<md-list>
+<md-list ng-if="$ctrl.getUserName()">
 	<md-list-item layout-padding>
 		&nbsp;&nbsp;<img ng-src="{{$ctrl.getUserData().picture.data.url}}"></img>
 
@@ -86,7 +86,8 @@
     <md-button class="md-raised md-primary"
     		aria-label="Submit"
     		ng-click="$ctrl.submitSelections()"
-    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
+    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving(),
+    					'submit-not-needed': !$ctrl.doesSomethingNeedSaving()}">
       	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;

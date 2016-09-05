@@ -64,18 +64,15 @@ class ListCtrl {
 	      }
 	    });
 
-		// this.relationTypes = [
-		// 	{type: 'date', text: 'Date'},
-		// 	{type: 'hangout', text: 'Normal hanging out'},
-		// 	{type: 'nonerotic', text: 'Definitely not romance'},
-		// 	{type: 'fuck', text: 'Fuck'},
-		// 	{type: 'fight', text: 'Fight'},
-		// ];
-
 		this.relationTypes = [
-			{type: 'go on a date or something', text: 'Go on a date or something'},
-			{type: 'hang out soon', text: 'Hang out soon'},
+			{type: 'swap incriminating secrets', text: 'Swap incriminating secrets'},
+			{type: 'fight', text: 'Fight'},
 		];
+
+		// this.relationTypes = [
+		// 	{type: 'go on a date or something', text: 'Go on a date or something'},
+		// 	{type: 'hang out soon', text: 'Hang out soon'},
+		// ];
 
 		var tryToGetFriends = function() {
 			Meteor.call('getFriends', {}, function(err, resp) {
