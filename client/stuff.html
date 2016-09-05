@@ -1,6 +1,6 @@
 <md-toolbar>
 	<div class="md-toolbar-tools">
-		<h3 flex>This will fix everything, right?</h3>
+        <h3 flex>{{$ctrl.existsRelation()}} This will fix everything, right?</h3>
 
 		<div ng-if="$ctrl.getUserName()">
 			{{$ctrl.getUserName()}}
@@ -40,7 +40,7 @@
 				<span class="md-caption">
 					<!-- needsSaving: {{$ctrl.needsSaving(friend.id, relationType.type)}}
 					relation: {{$ctrl.getRelation(friend.id, relationType.type)}} -->
-					lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime | relativeDateTime}}
+                    lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime}}
 				</span>
 			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"

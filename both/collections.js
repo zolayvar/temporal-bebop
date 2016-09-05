@@ -33,7 +33,8 @@ if (Meteor.isServer) {
       friendDocs.forEach(function(doc) {
           friends.push(doc["id"])
       })
-      friends.push(this.userId);
+      var id = UserData.findOne({"meteorId":this.userId}).id
+      friends.push(id)
       return Notes.find({"id": {$in: friends}});
   });
   Meteor.publish('relations', function publishRelations() {
@@ -41,7 +42,7 @@ if (Meteor.isServer) {
         senderMeteorId: this.userId
     })
   });
-  Meteor.publish("getUserData", function () {
-    return Meteor.users.find({_id: this.userId});
+  Meteor.publish("userData", function () {
+    return UserData.find({meteorId: this.userId});
   });
 }

@@ -39,8 +39,7 @@ class ListCtrl {
 	constructor($scope) {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
-        //XXX can probably remove getUserData?
-        Meteor.subscribe("getUserData")
+        Meteor.subscribe("userData")
         Meteor.subscribe("notes")
         Meteor.subscribe("lastReciprocated")
 
@@ -115,6 +114,11 @@ class ListCtrl {
 		}
 		return Meteor.user().service.facebook.link;
 	}
+
+    existsRelation() {
+        let relation = Relations.findOne({reciprocated:true});
+        return relation === undefined
+    }
 
 	getFacebookId() {
 		if (!Meteor.user() || !Meteor.user().services) {
