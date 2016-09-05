@@ -36,15 +36,19 @@ Meteor.methods({
     }
 })
 class ListCtrl {
-	constructor($scope) {
-		var that = this;
 
+    subscribe() {
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
         Meteor.subscribe("userData")
         Meteor.subscribe("meteorUserData")
         Meteor.subscribe("notes")
         Meteor.subscribe("lastReciprocated")
+    }
+
+	constructor($scope) {
+		var that = this;
+        this.subscribe()
 
 		$scope.viewModel(this);
 
@@ -220,10 +224,12 @@ class ListCtrl {
 	}
 
 	login() {
+        var that = this;
 		Meteor.loginWithFacebook({requestPermissions: ['user_friends', 'email']}, function(err){
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
             } else {
+                that.subscribe()
                 Meteor.call("registerUser");
             }
 		});
