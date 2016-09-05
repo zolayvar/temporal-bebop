@@ -48,7 +48,7 @@ class ListCtrl {
 
 	constructor($scope) {
 		var that = this;
-        this.subscribe()
+        this.subscribeToDBs()
 
 		$scope.viewModel(this);
 
