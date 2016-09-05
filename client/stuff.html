@@ -20,6 +20,16 @@
 </md-toolbar>
 
 <md-list>
+	<md-list-item layout-padding>
+		<img ng-src="{{$ctrl.userPicture}}"></img>&nbsp;&nbsp;
+
+		<span layout="column" flex>
+			<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
+				{{$ctrl.getUserName()}}
+			</a>
+	        <span class="md-caption" flex>{{$ctrl.getNote()}}</span>
+		</span>
+	</md-list-item>
 	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
 		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;
 
@@ -40,7 +50,7 @@
 				<span class="md-caption">
 					<!-- needsSaving: {{$ctrl.needsSaving(friend.id, relationType.type)}}
 					relation: {{$ctrl.getRelation(friend.id, relationType.type)}} -->
-					lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime | relativeDateTime}}
+					lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime}}
 				</span>
 			</div>
 			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"

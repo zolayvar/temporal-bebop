@@ -37,6 +37,8 @@ Meteor.methods({
 })
 class ListCtrl {
 	constructor($scope) {
+		var that = this;
+
         Meteor.subscribe('friends')
         Meteor.subscribe('relations')
         //XXX can probably remove getUserData?
@@ -80,10 +82,26 @@ class ListCtrl {
 		};
 		tryToGetFriends();
 
+		var tryToGetPicture = function() {
+			if (!Meteor.user() || !Meteor.user().services) {
+	    		setTimeout(tryToGetPicture, 500);
+	    		return;
+	    	}
+			Meteor.call('getPicture', {}, function(err, resp) {
+				if (!resp || !resp.data || !resp.data.url) {
+					setTimeout(tryToGetPicture, 500);
+					return;
+				}
+				that.userPicture = resp.data.url;
+			});
+		};
+		tryToGetPicture();
+
 		this.myNoteText = this.getNote();
 	}
 
     getNote(id) {
+    	var id = id || this.getUserId();
         var doc = Notes.findOne({id:id})
         if (!doc) {
             return '';
@@ -92,7 +110,16 @@ class ListCtrl {
     }
 
     submitSelections() {
-        Meteor.call("publishRelations")
+        Meteor.call("publishRelations", {}, function(err, resp) {
+
+        });
+    }
+
+    getUserId() {
+    	if (!Meteor.user() || !Meteor.user().services) {
+    		return;
+    	}
+    	return Meteor.user().services.facebook.id;
     }
 
 	getUserName() {
@@ -102,18 +129,11 @@ class ListCtrl {
 		return Meteor.user().profile.name;
 	}
 
-	getUserPicture() {
-		if (!Meteor.user()) {
-			return '';
-		}
-		return Meteor.user().profile.facebook;
-	}
-
 	getUserLink() {
-		if (!Meteor.user()) {
+		if (!Meteor.user() || !Meteor.user().services) {
 			return '';
 		}
-		return Meteor.user().service.facebook.link;
+		return Meteor.user().services.facebook.link;
 	}
 
 	getFacebookId() {
