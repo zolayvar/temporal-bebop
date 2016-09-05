@@ -17,8 +17,8 @@ function checkAndProcessReciprocity(senderId, receiverId, type){
     if (reciprocates(senderId, receiverId, type)) {
         email1 = getEmail(senderId);
         email2 = getEmail(receiverId);
-        name1 = getName(senderId);
-        name2 = getName(receiverId);
+        name1 = getFirstName(senderId);
+        name2 = getFirstName(receiverId);
         Email.send({
             cc: [email1, email2],
             from:"meddler@reciprocity.io",
@@ -39,9 +39,12 @@ function getEmail(id) {
     var doc = UserData.findOne({"id":id});
     return doc.email
 }
+function getFirstName(id) {
+    return getName(id).spilt(" ")[0]
+}
 function getName(id) {
     var doc = UserData.findOne({"id":id});
-    return doc.email
+    return doc.name
 }
 function getId(meteorId) {
     var doc = UserData.findOne({"meteorId":meteorId});
