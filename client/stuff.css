@@ -16,3 +16,7 @@ md-checkbox.is-checked .md-icon {
 .submit-needed {
 	background-color: blue !important;
 }
+
+md-checkbox.is-reciprocated .md-icon {
+	background-color: green !important;
+}
