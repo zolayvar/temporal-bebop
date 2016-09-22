@@ -8,17 +8,31 @@
 		</div>
 	</div>
 </md-toolbar>
-<br>
-<div>
-	<div layout="column" layout-align="center center">
-		<div>
-			What would you like to do with which friends, if you knew that they wanted to?<br>
+<div style="text-align:center;background-opacity:.1" class="colored-row md-whiteframe-1dp">
+	<div class="md-whiteframe-1dp" layout-padding>
+		<div layout="column" layout-align="center center">
+			<div>
+				What would you like to do with which friends, if you knew that they wanted to?<br>
+			</div>
+		</div>
+
+		<div ng-if="$ctrl.getUserName()">
+			<a href="javascript:void(0);"
+					class="md-caption"
+					style="color:black;"
+					ng-click="$ctrl.showHelpText = !$ctrl.showHelpText">{{showHelpText ? 'Hide explanation' : 'Explain how to use this site'}}</a>
 		</div>
 	</div>
 
-	<div layout="column" layout-align="center center">
-		<div> Select. Press
-			<md-button style="line-height: 24px;min-height: 24px;margin-left: -1px;margin-right: 0;"
+	<div layout="column" layout-align="center center" ng-if="$ctrl.showHelpText" layout-padding>
+		<div>
+			Select things you would do with people.
+			( <md-checkbox ng-checked="true" class="needs-saving katjas-boxes"></md-checkbox> = unsaved selection )
+		</div>
+
+		<div>
+			Press
+			<md-button style="line-height: 24px;min-height: 24px;margin: 0;"
 					class="md-raised md-primary"
 		    		aria-label="Submit"
 		    		ng-click="$ctrl.submitSelections()"
@@ -27,18 +41,22 @@
 		    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
 		    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
 		      	Submit selections
-		    </md-button>. Find out if they reciprocate.
-
-			(<md-checkbox ng-checked="true" class="is-checked katjas-boxes"></md-checkbox> = not yet,
-			<md-checkbox ng-checked="true" class="is-checked is-reciprocated katjas-boxes"></md-checkbox> = yes)
+		    </md-button>.
 		</div>
 
 		<div>
-			If they never reciprocate, nobody knows you tried.
+		    Find out if they reciprocate.
+
+			( <md-checkbox ng-checked="true" class="is-checked is-reciprocated katjas-boxes"></md-checkbox> = yes,
+			<md-checkbox ng-checked="true" class="is-checked katjas-boxes"></md-checkbox> = no (yet) )
 		</div>
 
-		<div style="margin-top: 10px;">
-			If they do, you can do it!
+		<div>
+			If they never reciprocate, nobody knows you tried!
+		</div>
+
+		<div>
+			If they do, you can do the thing!
 		</div>
 	</div>
 </div>
@@ -55,7 +73,7 @@
 	</button>
 </div>
 
-<md-list ng-if="$ctrl.getUserName()">
+<md-list ng-if="$ctrl.getUserName()" style="padding-top:0">
 	<md-list-item>
 		<div layout="column" layout-align="start start"
 				layout-gt-sm="row" layout-align-gt-sm="start center"
@@ -78,7 +96,7 @@
 					<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
 						<md-input-container style="margin:0">
 							<label>Anything people should know?</label>
-							<input ng-model="$ctrl.myNoteText" />
+							<input ng-model="$ctrl.myNoteText" md-maxlength="140"/>
 							<span class="md-caption">e.g. 'I never use the left column, looking for female friends'</span>
 						</md-input-container>
 					  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
@@ -134,8 +152,7 @@
 <br>
 
 <div class="bottom-bar md-whiteframe-1dp" ng-if="$ctrl.getUserName()">
-  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px;">
-
+  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px; border-top:1px solid rgba(0,0,0,.05);">
     <span flex></span>
     <md-button class="md-raised md-primary"
     		aria-label="Submit"
