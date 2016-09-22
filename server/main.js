@@ -96,6 +96,11 @@ Meteor.methods({
                     datum.name = friend_info.name;
                     datum.id = friend_info.id;
 
+                    let friendUserData = UserData.findOne({"id":friend_info.id});
+                    if (friendUserData) {
+                        datum.registered_date = friendUserData.registered_date;
+                    }
+
                     var selector = {};
                     selector["senderId"] = user.id;
                     selector["senderMeteorId"] = Meteor.userId();
@@ -104,9 +109,8 @@ Meteor.methods({
 
                     Friends.upsert(selector, datum);
 
-                    let friendUserData = UserData.findOne({"id":friend_info.id});
                     if (friendUserData) {
-                        let friendMeteorId = UserData.findOne({"id":friend_info.id}).meteorId;
+                        let friendMeteorId = friendUserData.meteorId;
 
                         let reciprocal_datum = {}
                         reciprocal_datum.picture = my_info .picture;
@@ -136,9 +140,10 @@ Meteor.methods({
             "picture":my_info.picture,
         }
         let affected = UserData.upsert(selector, doc);
-        if (affected.inserId) {
-            UserData.update({"id":user.id}, {$set: Date.now()});
-            Friends.update({"id":user.id}, {$set: Date.now()});
+        if (affected.insertedId) {
+            let set_time = {$set: {"registered_date":Date.now()}};
+            UserData.update({"id":user.id}, set_time);
+            Friends.update({"id":user.id}, set_time);
         }
     	return true;
     },
