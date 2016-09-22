@@ -49,13 +49,16 @@ class ListCtrl {
 	constructor($scope, $mdDialog) {
 		var that = this;
 		that.mdDialog = $mdDialog;
+
         this.subscribeToDBs()
 
 		$scope.viewModel(this);
 
 		this.helpers({
 	      friends() {
-	        return Friends.find();
+	        return Friends.find().fetch().sort(function(a, b) {
+	        	return that.doesThisPersonReciprocateMe(a) < that.doesThisPersonReciprocateMe(b);
+	        });
 	      }
 	    });
 
@@ -194,6 +197,16 @@ class ListCtrl {
 				// uhhhh
 			});
 		}
+	}
+
+	doesThisPersonReciprocateMe(person) {
+		if (!this.relations) {
+			return false;
+		}
+
+		return this.getAllReciprocatedRelations().some(function(relation) {
+			return relation.receiverId == person.id;
+		});
 	}
 
 	getAllReciprocatedRelations() {
