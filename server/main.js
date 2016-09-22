@@ -11,7 +11,7 @@ function updateOnReciprocation(senderId, receiverId, type){
     let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
     Relations.update(selector, {$set: {"reciprocated":true}})
     let doc = {"senderId":senderId, "receiverId":receiverId, "type":type, "datetime":Date()}
-    LastReciprocated.upsert(selector, doc)
+    LastReciprocated.upsert(selector, {$set:doc})
 }
 
 function checkAndProcessReciprocity(id1, id2, type){
@@ -113,7 +113,7 @@ Meteor.methods({
                     selector["id"] = friend_info.id;
                     Object.assign(datum, selector)
 
-                    Friends.upsert(selector, datum);
+                    Friends.upsert(selector, {$set: datum});
 
                     if (friendUserData) {
                         let friendMeteorId = friendUserData.meteorId;
@@ -130,7 +130,7 @@ Meteor.methods({
                         reciprocal_selector["id"] = my_info.id;
                         Object.assign(reciprocal_datum, reciprocal_selector)
 
-                        Friends.upsert(reciprocal_selector, reciprocal_datum);
+                        Friends.upsert(reciprocal_selector, {$set: reciprocal_datum});
                     }
 
                 }
@@ -145,7 +145,7 @@ Meteor.methods({
             "meteorId":Meteor.userId(),
             "picture":my_info.picture,
         }
-        let affected = UserData.upsert(selector, doc);
+        let affected = UserData.upsert(selector, {$set: doc});
         if (affected.insertedId) {
             let set_time = {$set: {"registered_date":Date.now()}};
             UserData.update({"id":user.id}, set_time);
@@ -166,7 +166,7 @@ Meteor.methods({
         var selector = {"meteorId":meteorId};
         var truncatedNote = note.substring(0, 141);
         var datum = {"id":id, "meteorId":meteorId, "note":truncatedNote};
-        Notes.upsert(selector, datum)
+        Notes.upsert(selector, {$set: datum})
     },
     getNote : function({id}){
         var doc = Notes.findOne({"id":id});
@@ -196,7 +196,7 @@ Meteor.methods({
                 "published":false, "to_remove":false, "reciprocated":false,
                 "alerted":false}
             };
-            Relations.upsert(selector, doc);
+            Relations.upsert(selector, {$set: doc});
         }
     },
     publishRelations : function() {
