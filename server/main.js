@@ -14,20 +14,17 @@ function updateOnReciprocation(senderId, receiverId, type){
     LastReciprocated.upsert(selector, doc)
 }
 
-function checkAndProcessReciprocity(senderId, receiverId, type){
-    if (reciprocates(senderId, receiverId, type)) {
-        email1 = getEmail(senderId);
-        email2 = getEmail(receiverId);
-        name1 = getFirstName(senderId);
-        name2 = getFirstName(receiverId);
-        Email.send({
-            cc: [email1, email2],
-            from:"meddler@reciprocity.io",
-            subject:"Your desires have been reciprocated",
-            text:"Dear " + name1 + " and " + name2 +",\n\nYou'd both like to " + type + ", consider responding to this thread to organize a time.\n\nYours,\nreciprocity.io",
-        })
-        updateOnReciprocation(senderId, receiverId, type);
-        updateOnReciprocation(receiverId, senderId, type);
+function checkAndProcessReciprocity(id1, id2, type){
+    if (reciprocates(id1, id2, type)) {
+        email1 = getEmail(id1);
+        email2 = getEmail(id2);
+        name1 = getName(id1);
+        name2 = getName(id2);
+        emailForReciprocity(email1, email2, name1, name2, type);
+        notifyForReciprocity(id1, name2, type)
+        notifyForReciprocity(id2, name1, type)
+        updateOnReciprocation(id1, id2, type);
+        updateOnReciprocation(id2, id1, type);
         return true;
     }
     return false;
@@ -53,11 +50,21 @@ function getId(meteorId) {
     var doc = UserData.findOne({"meteorId":meteorId});
     return doc.id
 }
-function notify(id) {
-        let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
-        let result = Meteor.wrapAsync(fbgraph.get)(query);
-        fbgraph.post(id + "/notifications?template=Hi!&access_token="+result.access_token, (err, resp) => console.log(err, resp))
-
+function emailForReciprocity(email1, email2, name1, name2, type){
+    Email.send({
+        cc: [email1, email2],
+        from:"meddler@reciprocity.io",
+        subject:"Your desires have been reciprocated",
+        text:"Dear " + name1 + " and " + name2 +",\n\nYou'd both like to " + type + ", consider responding to this thread to organize a time.\n\nYours,\nreciprocity.io",
+    });
+}
+function notifyForReciprocity(id1, name2, type) {
+    notify(id1, name2 + " would also like to " + type + ", you should organize a time.")
+}
+function notify(id, message) {
+    let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
+    let result = Meteor.wrapAsync(fbgraph.get)(query);
+    fbgraph.post(id + "/notifications?template="+message+"&access_token="+result.access_token, (err, resp) => console.log(err, resp))
 }
 //function permute(doc) {
 //    newDoc = doc

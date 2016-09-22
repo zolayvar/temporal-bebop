@@ -1,9 +1,21 @@
+export const appId = ID
+export const appSecret = SECRET
+
 ServiceConfiguration.configurations.remove({
     service: 'facebook'
 });
 
 ServiceConfiguration.configurations.insert({
     service: 'facebook',
-    appId: 'ID',
-    secret: 'SECRET'
+    appId: appId,
+    secret: appSecret,
+});
+ServiceConfiguration.configurations.remove({
+    service: 'facebook'
+});
+
+ServiceConfiguration.configurations.insert({
+    service: 'facebook',
+    appId: appId
+    secret: appSecret
 });
