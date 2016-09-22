@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
 import { Relations, Friends, UserData, Notes, LastReciprocated } from '../both/collections.js'
-import { appId, appSecret } from './local-social-config.js'
+import { appId, appSecret } from './social-config.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -59,7 +59,7 @@ function emailForReciprocity(email1, email2, name1, name2, type){
     });
 }
 function notifyForReciprocity(id1, name2, type) {
-    notify(id1, name2 + " would also like to " + type + ", you should organize a time.")
+    notify(id1, name2 + " would also like to " + type + ".")
 }
 function notify(id, message) {
     let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
