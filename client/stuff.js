@@ -65,8 +65,8 @@ class ListCtrl {
 	    });
 
 		this.relationTypes = [
-			{type: 'swap incriminating secrets', text: 'Swap incriminating secrets'},
-			{type: 'fight', text: 'Fight'},
+			{type: 'dig a hole', text: 'Dig a hole'},
+			{type: 'cut down a tree', text: 'Cut down a tree'},
 		];
 
 		// this.relationTypes = [
