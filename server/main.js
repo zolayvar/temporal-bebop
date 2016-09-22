@@ -153,7 +153,8 @@ Meteor.methods({
         var id = Meteor.user().services.facebook.id;
         var meteorId = Meteor.userId()
         var selector = {"meteorId":meteorId};
-        var datum = {"id":id, "meteorId":meteorId, "note":note};
+        var truncatedNote = note.substring(0, 141);
+        var datum = {"id":id, "meteorId":meteorId, "note":truncatedNote};
         Notes.upsert(selector, datum)
     },
     getNote : function({id}){
