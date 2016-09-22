@@ -57,14 +57,15 @@ class ListCtrl {
 		this.helpers({
 	      friends() {
             return Friends.find({}, {sort: function(a, b) {
-                if (that.personReciprocates(a) > that.personReciprocates(b)) {
+                if (that.personReciprocates(a) && !that.personReciprocates(b)) {
                     return -1
                 }
-                if (that.personReciprocates(b) > that.personReciprocates(a)) {
+                if (that.personReciprocates(b) && !that.personReciprocates(a)) {
                     return 1
                 }
-                //XXX reverse the next two signs
                 console.log("comparing...");
+                console.log(that.personReciprocates(a))
+                console.log(that.personReciprocates(b))
                 console.log(a)
                 console.log(b)
                 console.log(a.registered_date);
