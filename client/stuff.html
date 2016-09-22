@@ -125,18 +125,19 @@
 				</span>
 			</div>
 
-			<div layout="row" layout-align="end center" flex>
+			<div layout="column" layout-gt-sm="row" layout-align="start end" layout-align-gt-sm="end center" style="width:100%" flex>
 				<span ng-repeat="relationType in $ctrl.relationTypes">
-					&nbsp;&nbsp;
-					{{relationType.text}}
-					<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
-							ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
-							ng-class="{
-									'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
-									'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
-									'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
-								}"
-							aria-label="relationType"></md-checkbox>
+					<span layout="row" style="padding-top:4px;">
+						&nbsp;&nbsp;{{relationType.text}}&nbsp;
+						<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+								ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
+								ng-class="{
+										'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
+										'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
+										'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
+									}"
+								aria-label="relationType"></md-checkbox>
+					</span>
 				</span>
 			</div>
 		</div>
