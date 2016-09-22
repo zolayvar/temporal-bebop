@@ -17,25 +17,33 @@ if (Meteor.isServer) {
         senderMeteorId: this.userId
     })
   });
-  Meteor.publish('lastReciprocated', function publishLastReciprocated() {
-      let userdata = UserData.findOne({"meteorId":this.userId});
-      if (!userdata) {
+  //Meteor.publish('lastReciprocated', function publishLastReciprocated() {
+  //    if (!this.userId) {
+  //        return this.ready()
+  //    }
+  //    let userdata = UserData.findOne({"meteorId":this.userId});
+  //    if (!userdata){
+  //        return this.ready()
+  //    }
+  //    senderId = userdata.id;
+  //    return LastReciprocated.find({
+  //        senderId: senderId
+  //    })
+  //});
+  Meteor.publish('notes', function publishNotes() {
+      if (!this.userId) {
           return this.ready()
       }
-      senderId = userdata.id;
-      return LastReciprocated.find({
-          senderId: senderId
-      })
-  })
-  Meteor.publish('notes', function publishNotes() {
       var friendDocs = Friends.find({senderMeteorId: this.userId});
       var friends = []
       friendDocs.forEach(function(doc) {
           friends.push(doc["id"])
       })
-      var id = UserData.findOne({"meteorId":this.userId}).id
-      friends.push(id)
-      return Notes.find({"id": {$in: friends}});
+      var userdata = UserData.findOne({"meteorId":this.userId});
+      if (userdata) {
+          friends.push(userdata.id)
+      }
+      return Notes.find({$or: [{"id": {$in: friends}}, {"meteorId":this.userId}]});
   });
   Meteor.publish('relations', function publishRelations() {
     return Relations.find({

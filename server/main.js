@@ -108,8 +108,9 @@ Meteor.methods({
     },
     setNote : function({note}) {
         var id = Meteor.user().services.facebook.id;
-        var selector = {"id":id};
-        var datum = {"id":id, "note":note};
+        var meteorId = Meteor.userId()
+        var selector = {"meteorId":meteorId};
+        var datum = {"id":id, "meteorId":meteorId, "note":note};
         Notes.upsert(selector, datum)
     },
     getNote : function({id}){
@@ -175,6 +176,4 @@ Meteor.methods({
         })
         return result;
     },
-    getFriends : function() {
-    }
 })
