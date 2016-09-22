@@ -40,37 +40,34 @@
 		  	</md-button>
 	  	</span>
 	</md-list-item>
-	<md-list-item ng-repeat="friend in $ctrl.friends" layout-padding>
-		<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;&nbsp;&nbsp;
+	<div ng-repeat="friend in $ctrl.friends">
+		<md-list-item ng-class="{'colored-row': ($index + 1) % 2}" layout-padding>
+			<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;&nbsp;&nbsp;
 
-		<span layout="column" flex>
-			<a ng-href="{{friend.link}}" target="_blank">
-				{{friend.name}}
-			</a>
-	        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
-		</span>
+			<span layout="column" flex>
+				<a ng-href="{{friend.link}}" target="_blank">
+					{{friend.name}}
+				</a>
+		        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
+			</span>
 
-		&nbsp;&nbsp;
-
-		<span ng-repeat="relationType in $ctrl.relationTypes" layout="row">
 			&nbsp;&nbsp;
-			<div layout="column">
+
+			<span ng-repeat="relationType in $ctrl.relationTypes" layout="row" layout-align="center center">
+				&nbsp;&nbsp;
 				{{relationType.text}}
 				&nbsp;
-				<!--<span class="md-caption">
-                    lastReciprocated: {{$ctrl.lastReciprocated(friend.id, relationType.type)[0].datetime}}
-                    </span>-->
-			</div>
-			<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
-					ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
-					ng-class="{
-							'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
-							'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
-							'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
-						}"
-					aria-label="relationType"></md-checkbox>
-		</span>
-	</md-list-item>
+				<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+						ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
+						ng-class="{
+								'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
+								'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
+								'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
+							}"
+						aria-label="relationType"></md-checkbox>
+			</span>
+		</md-list-item>
+	</div>
 </md-list>
 
 <br>
