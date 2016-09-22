@@ -129,7 +129,6 @@
 				<span ng-repeat="relationType in $ctrl.relationTypes">
 					&nbsp;&nbsp;
 					{{relationType.text}}
-					&nbsp;
 					<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
 							ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
 							ng-class="{

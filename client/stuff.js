@@ -55,6 +55,12 @@ class ListCtrl {
 		$scope.viewModel(this);
 
 		this.helpers({
+	      relations() {
+	        return Relations.find();
+	      }
+	    });
+
+		this.helpers({
 	      friends() {
             return Friends.find({}, {sort: function(a, b) {
                 if (that.personReciprocates(a) > that.personReciprocates(b)) {
@@ -67,6 +73,7 @@ class ListCtrl {
                 console.log("comparing...");
                 console.log(a)
                 console.log(b)
+                console.log(that.personReciprocates(a), that.personReciprocates(b));
                 console.log(a.registered_date);
                 console.log(b.registered_date);
                 if (b.registered_date == undefined && a.registered_date !== undefined) {
@@ -83,12 +90,6 @@ class ListCtrl {
                 }
                 return 0
 	        }});
-	      }
-	    });
-
-		this.helpers({
-	      relations() {
-	        return Relations.find();
 	      }
 	    });
 
@@ -164,7 +165,7 @@ class ListCtrl {
         		let sentences = resp.map(function(relation) {
         			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + relation.type + '!';
         		});
-        		sentences.push('As more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
+        		sentences.push('\nAs more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
         		dialogText = sentences.join('\n');
 
         	}
@@ -229,6 +230,7 @@ class ListCtrl {
 		if (!this.relations) {
 			return false;
 		}
+		console.log('reciprocated relations',this.getAllReciprocatedRelations());
 
 		return this.getAllReciprocatedRelations().some(function(relation) {
 			return relation.receiverId == person.id;
@@ -240,6 +242,7 @@ class ListCtrl {
 			return [];
 		}
 
+		console.log(this.relations);
 		return this.relations.filter(function(relation) {
 			return relation.reciprocated;
 		});
