@@ -140,7 +140,9 @@ class ListCtrl {
         		let sentences = resp.map(function(relation) {
         			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + relation.type + '!';
         		});
+        		sentences.push('As more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
         		dialogText = sentences.join('\n');
+
         	}
 
 			that.mdDialog.show(
