@@ -63,10 +63,10 @@ class ListCtrl {
 		this.helpers({
 	      friends() {
             return Friends.find({}, {sort: function(a, b) {
-                if (that.personReciprocates(a) > that.personReciprocates(b)) {
+                if (a.reciprocates && !b.reciprocates) {
                     return -1
                 }
-                if (that.personReciprocates(b) > that.personReciprocates(a)) {
+                if (b.reciprocates && !a.reciprocates) {
                     return 1
                 }
                 //XXX reverse the next two signs
@@ -224,28 +224,6 @@ class ListCtrl {
 				// uhhhh
 			});
 		}
-	}
-
-	personReciprocates(person) {
-		if (!this.relations) {
-			return false;
-		}
-		console.log('reciprocated relations',this.getAllReciprocatedRelations());
-
-		return this.getAllReciprocatedRelations().some(function(relation) {
-			return relation.receiverId == person.id;
-		});
-	}
-
-	getAllReciprocatedRelations() {
-		if (!this.relations) {
-			return [];
-		}
-
-		console.log(this.relations);
-		return this.relations.filter(function(relation) {
-			return relation.reciprocated;
-		});
 	}
 
 	getRelation(receiverId, type) {

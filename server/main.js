@@ -32,8 +32,8 @@ function checkAndProcessReciprocity(id1, id2, type){
 }
 
 function markFriendsAsReciprocating(id1, id2) {
-    Friends.update({senderId: id1, id: id2}, {reciprocates: true});
-    Friends.update({senderId: id2, id: id1}, {reciprocates: true});
+    Friends.update({senderId: id1, id: id2}, {$set: {reciprocates: true}});
+    Friends.update({senderId: id2, id: id1}, {$set: {reciprocates: true}});
 }
 
 function reciprocates(senderId, receiverId, type) {
