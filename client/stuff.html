@@ -78,7 +78,7 @@
 					<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
 						<md-input-container style="margin:0">
 							<label>Anything people should know?</label>
-							<input ng-model="$ctrl.myNoteText" />
+							<input ng-model="$ctrl.myNoteText" md-maxlength="300"/>
 							<span class="md-caption">e.g. 'I never use the left column, looking for female friends'</span>
 						</md-input-container>
 					  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
