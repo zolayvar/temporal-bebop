@@ -54,12 +54,12 @@ function emailForReciprocity(email1, email2, name1, name2, type){
     Email.send({
         cc: [email1, email2],
         from:"meddler@reciprocity.io",
-        subject:"Your desires have been reciprocated",
-        text:"Dear " + name1 + " and " + name2 +",\n\nYou'd both like to " + type + ", consider responding to this thread to organize a time.\n\nYours,\nreciprocity.io",
+        subject:"Reciprocation!",
+        text:"Dear " + name1 + " and " + name2 +",\n\nGood news! You both want to " + type + ", You can use this thread to organize if you want.\n\nYours,\nreciprocity.io",
     });
 }
 function notifyForReciprocity(id1, name2, type) {
-    notify(id1, name2 + " would also like to " + type + ".")
+    notify(id1, "You and " + name2 + " both want to " + type + ".")
 }
 function notify(id, message) {
     let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
@@ -135,7 +135,11 @@ Meteor.methods({
             "meteorId":Meteor.userId(),
             "picture":my_info.picture,
         }
-        UserData.upsert(selector, doc)
+        let affected = UserData.upsert(selector, doc);
+        if (affected.inserId) {
+            UserData.update({"id":user.id}, {$set: Date.now()});
+            Friends.update({"id":user.id}, {$set: Date.now()});
+        }
     	return true;
     },
     notify : function({receiverId, type}) {

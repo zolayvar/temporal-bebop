@@ -11,6 +11,17 @@
 	</div>
 </md-toolbar>
 
+<div> What would you like to do with which friends, if you knew that they wanted to? </div>
+
+<div> Select. Press [submit]. Find out if they reciprocate. </div>
+
+<div> 
+<md-checkbox ng-checked="true" class="is-checked"></md-checkbox> = not reciprocated
+<md-checkbox ng-checked="true" class="is-checked is-reciprocated"></md-checkbox> = reciprocated
+</div>
+
+
+
 <div ng-if="!$ctrl.getUserName()" layout="row" layout-align="center center" flex>
 	<br><br><br><br>
 	<br><br><br><br>
@@ -35,7 +46,7 @@
 
 		<form>
 			<md-input-container>
-				<label>Text for under your name</label>
+				<label>Anything people should know?</label>
 				<input ng-model="$ctrl.myNoteText" style="width:400px;">
 			</md-input-container>
 		  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
