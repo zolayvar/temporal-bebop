@@ -94,8 +94,8 @@ class ListCtrl {
 	    });
 
 		this.relationTypes = [
-			{type: 'dig a hole', text: 'Dig a hole'},
-			{type: 'cut down a tree', text: 'Cut down a tree'},
+			{type: 'Make a sand castle', text: 'Make a sand castle'},
+			{type: 'build a snowman', text: 'Build a snowman'},
 		];
 
 		// this.relationTypes = [
