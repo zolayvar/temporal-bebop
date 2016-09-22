@@ -2,6 +2,10 @@ md-list-item .md-no-style {
 	padding: 0px !important;
 }
 
+.katjas-boxes {
+	margin-right: -11px !important;
+}
+
 .md-caption {
 	padding-top: 2px;
 	opacity: .6;

@@ -8,16 +8,40 @@
 		</div>
 	</div>
 </md-toolbar>
+<br>
+<div>
+	<div layout="column" layout-align="center center">
+		<div>
+			What would you like to do with which friends, if you knew that they wanted to?<br>
+		</div>
+	</div>
 
-<div> What would you like to do with which friends, if you knew that they wanted to? </div>
+	<div layout="column" layout-align="center center">
+		<div> Select. Press
+			<md-button style="line-height: 24px;min-height: 24px;margin-left: -1px;margin-right: 0;"
+					class="md-raised md-primary"
+		    		aria-label="Submit"
+		    		ng-click="$ctrl.submitSelections()"
+		    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
+		    		ng-attr-title="Check some boxes to begin your journey"
+		    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
+		    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
+		      	Submit selections
+		    </md-button>. Find out if they reciprocate.
 
-<div> Select. Press [submit]. Find out if they reciprocate. </div>
+			(<md-checkbox ng-checked="true" class="is-checked katjas-boxes"></md-checkbox> = not yet,
+			<md-checkbox ng-checked="true" class="is-checked is-reciprocated katjas-boxes"></md-checkbox> = yes)
+		</div>
 
-<div> 
-<md-checkbox ng-checked="true" class="is-checked"></md-checkbox> = not reciprocated
-<md-checkbox ng-checked="true" class="is-checked is-reciprocated"></md-checkbox> = reciprocated
+		<div>
+			If they never reciprocate, nobody knows you tried.
+		</div>
+
+		<div style="margin-top: 10px;">
+			If they do, you can do it!
+		</div>
+	</div>
 </div>
-
 
 
 <div ng-if="!$ctrl.getUserName()" layout="row" layout-align="center center">
@@ -51,13 +75,16 @@
 
 			<span layout="row" layour-align="end center">
 				<form style="padding-top:0" flex>
-					<md-input-container>
-						<label>Anything people should know?</label>
-						<input ng-model="$ctrl.myNoteText" style="width:200px">
-					</md-input-container>
-				  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
-				  		Save
-				  	</md-button>
+					<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
+						<md-input-container style="margin:0">
+							<label>Anything people should know?</label>
+							<input ng-model="$ctrl.myNoteText" />
+							<span class="md-caption">e.g. 'I never use the left column, looking for female friends'</span>
+						</md-input-container>
+					  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+					  		Save
+					  	</md-button>
+				  	</span>
 			  	</form>
 		  	</span>
 	  	</div>
@@ -116,7 +143,7 @@
     		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
     		ng-attr-title="Check some boxes to begin your journey"
     		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
-    	<md-tooltip>Submit your selections to enable reciprocation</md-tooltip>
+    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
       	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;
