@@ -25,9 +25,15 @@ function checkAndProcessReciprocity(id1, id2, type){
         notifyForReciprocity(id2, name1, type)
         updateOnReciprocation(id1, id2, type);
         updateOnReciprocation(id2, id1, type);
+        markFriendsAsReciprocating(id1, id2);
         return true;
     }
     return false;
+}
+
+function markFriendsAsReciprocating(id1, id2) {
+    Friends.update({senderId: id1, id: id2}, {reciprocates: true});
+    Friends.update({senderId: id2, id: id1}, {reciprocates: true});
 }
 
 function reciprocates(senderId, receiverId, type) {
