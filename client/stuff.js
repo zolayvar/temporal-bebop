@@ -85,11 +85,16 @@ class ListCtrl {
                     return -1
                 }
                 if (a.registered_date < b.registered_date) {
-                	console.log('returning -1, because a should come first, because a has registered_date and b doesnt');
+                	console.log('returning 1, because b should come first, because b.registerUser > a.registered_date');
                     return 1
                 }
                 if (a.name < b.name) {
+                	console.log('returning -1, because a should come first, because a.name < b.name');
                 	return -1;
+                }
+                if (a.name > b.name) {
+                	console.log('returning 1, because b should come first, because a.name > b.name');
+                	return 1;
                 }
                 return 0
 	        }});
