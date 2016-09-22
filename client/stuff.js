@@ -73,7 +73,6 @@ class ListCtrl {
                 console.log("comparing...");
                 console.log(a)
                 console.log(b)
-                console.log(that.personReciprocates(a), that.personReciprocates(b));
                 console.log(a.registered_date);
                 console.log(b.registered_date);
                 if (b.registered_date == undefined && a.registered_date !== undefined) {
@@ -94,7 +93,7 @@ class ListCtrl {
 	    });
 
 		this.relationTypes = [
-			{type: 'Make a sand castle', text: 'Make a sand castle'},
+			{type: 'make a sand castle', text: 'Make a sand castle'},
 			{type: 'build a snowman', text: 'Build a snowman'},
 		];
 
