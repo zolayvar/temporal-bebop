@@ -3,7 +3,7 @@
     "env": { 
        "ROOT_URL": "https://www.reciprocity.io",
        "MONGO_URL": "mongodb://temporalbebopdb:PASSWORD@ds015879.mlab.com:15879/temporalbebop",
-       "MAIL_URL":"smtp://postmaster%40mg.marblespuzzle.com:PASSWORD@smtp.mailgun.org:587"
+       "MAIL_URL":"smtp://postmaster%40mg.reciprocity.io:PASSWORD@smtp.mailgun.org:587",
     } 
   }
 }
