@@ -18,5 +18,13 @@ md-checkbox.is-checked .md-icon {
 }
 
 md-checkbox.is-reciprocated .md-icon {
-	background-color: lightgreen !important;
+	background-color: #08eb00 !important;
+}
+
+.colored-row {
+	background-color: rgba(50,0,250,.07);
+}
+
+md-checkbox {
+	margin-bottom: 0 !important;
 }
