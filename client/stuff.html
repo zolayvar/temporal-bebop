@@ -1,7 +1,5 @@
-<md-toolbar flex>
-	<div class="md-toolbar-tools">
-        <h3 flex>This will fix everything, right?</h3>
-
+<md-toolbar layout="row">
+	<div class="md-toolbar-tools" layout="row" layout-align="end center" flex>
 		<div ng-if="$ctrl.getUserName()">
 			{{$ctrl.getUserName()}}
 			<button md-button
@@ -11,7 +9,7 @@
 	</div>
 </md-toolbar>
 
-<div ng-if="!$ctrl.getUserName()" layout="row" layout-align="center center" flex>
+<div ng-if="!$ctrl.getUserName()" layout="row" layout-align="center center">
 	<br><br><br><br>
 	<br><br><br><br>
 	<br><br><br><br>
@@ -23,54 +21,71 @@
 </div>
 
 <md-list ng-if="$ctrl.getUserName()">
-	<md-list-item layout-padding>
-		&nbsp;&nbsp;<img ng-src="{{$ctrl.getUserData().picture.data.url}}"></img>
+	<md-list-item>
+		<div layout="column" layout-align="start start"
+				layout-gt-sm="row" layout-align-gt-sm="start center"
+				layout-padding flex>
+			<span layout="row" layout-align="start center" flex>
+				<img ng-src="{{$ctrl.getUserData().picture.data.url}}"></img>
 
-		<span layout="column" flex>
-			<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
-				{{$ctrl.getUserName()}}
-			</a>
-	        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
-		</span>
+				&nbsp;&nbsp;&nbsp;
 
-		<form>
-			<md-input-container>
-				<label>Text for under your name</label>
-				<input ng-model="$ctrl.myNoteText" style="width:400px;">
-			</md-input-container>
-		  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
-		  		Save
-		  	</md-button>
-	  	</form>
+				<span layout="column" flex>
+					<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
+						{{$ctrl.getUserName()}}
+					</a>
+			        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
+				</span>
+			</span>
+
+			<span layout="row" layour-align="end center">
+				<form style="padding-top:0" flex>
+					<md-input-container>
+						<label>Text for under your name</label>
+						<input ng-model="$ctrl.myNoteText" style="width:200px">
+					</md-input-container>
+				  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+				  		Save
+				  	</md-button>
+			  	</form>
+		  	</span>
+	  	</div>
 	</md-list-item>
-	<div ng-repeat="friend in $ctrl.friends">
-		<md-list-item ng-class="{'colored-row': ($index + 1) % 2}" layout-padding>
-			<img ng-src="{{friend.picture.data.url}}"></img>&nbsp;&nbsp;&nbsp;&nbsp;
+	<md-list-item ng-repeat="friend in $ctrl.friends"
+			ng-class="{'colored-row': ($index + 1) % 2}">
+		<div layout="column" layout-align="start start"
+				layout-gt-sm="row" layout-align-gt-sm="start center"
+				layout-padding flex>
+			<div layout="row" layout-align="start center" flex>
+				<img ng-src="{{friend.picture.data.url}}"></img>
 
-			<span layout="column" flex>
-				<a ng-href="{{friend.link}}" target="_blank">
-					{{friend.name}}
-				</a>
-		        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
-			</span>
+				&nbsp;&nbsp;&nbsp;
 
-			&nbsp;&nbsp;
+				<span layout="column" flex>
+					<a ng-href="{{friend.link}}" target="_blank">
+						{{friend.name}}
+					</a>
+			        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
+				</span>
+			</div>
 
-			<span ng-repeat="relationType in $ctrl.relationTypes" layout="row" layout-align="center center">
-				&nbsp;&nbsp;
-				{{relationType.text}}
-				&nbsp;
-				<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
-						ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
-						ng-class="{
-								'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
-								'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
-								'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
-							}"
-						aria-label="relationType"></md-checkbox>
-			</span>
-		</md-list-item>
-	</div>
+			<div layout="row" layout-align="end center" flex>
+				<span ng-repeat="relationType in $ctrl.relationTypes">
+					&nbsp;&nbsp;
+					{{relationType.text}}
+					&nbsp;
+					<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+							ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
+							ng-class="{
+									'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
+									'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
+									'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
+								}"
+							aria-label="relationType"></md-checkbox>
+				</span>
+			</div>
+		</div>
+	</md-list-item>
 </md-list>
 
 <br>
@@ -87,8 +102,10 @@
     <md-button class="md-raised md-primary"
     		aria-label="Submit"
     		ng-click="$ctrl.submitSelections()"
-    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving(),
-    					'submit-not-needed': !$ctrl.doesSomethingNeedSaving()}">
+    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
+    		ng-attr-title="Check some boxes to begin your journey"
+    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
+    	<md-tooltip>Submit your selections to enable reciprocation</md-tooltip>
       	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;

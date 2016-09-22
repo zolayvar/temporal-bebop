@@ -1,4 +1,11 @@
+md-list-item .md-no-style {
+	padding: 0px !important;
+}
 
+.md-caption {
+	padding-top: 2px;
+	opacity: .6;
+}
 
 md-checkbox.is-checked .md-icon {
 	background-color: blue !important;
