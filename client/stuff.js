@@ -63,29 +63,38 @@ class ListCtrl {
 		this.helpers({
 	      friends() {
             return Friends.find({}, {sort: function(a, b) {
+            	console.log('sorting ', a, b);
                 if (a.reciprocates && !b.reciprocates) {
+                	console.log('returning -1, because a should come first, because a reciprocated and b doesnt');
                     return -1
                 }
                 if (b.reciprocates && !a.reciprocates) {
+                	console.log('returning 1, because b should come first, because b reciprocated and a doesnt');
                     return 1
                 }
                 if (b.registered_date == undefined && a.registered_date !== undefined) {
+                	console.log('returning -1, because a should come first, because a has registered_date and b doesnt');
                     return -1
                 }
                 if (a.registered_date == undefined && b.registered_date !== undefined) {
+                	console.log('returning 1, because b should come first, because b has registered_date and a doesnt');
                     return 1
                 }
                 if (a.registered_date > b.registered_date) {
+                	console.log('returning -1, because a should come first, because a.registered_date > b.registered_date');
                     return -1
                 }
                 if (a.registered_date < b.registered_date) {
+                	console.log('returning 1, because b should come first, because b.registerUser > a.registered_date');
                     return 1
                 }
                 if (a.name < b.name) {
-                	return -1
+                	console.log('returning -1, because a should come first, because a.name < b.name');
+                	return -1;
                 }
-                if (b.name < a.name) {
-                    return 1
+                if (a.name > b.name) {
+                	console.log('returning 1, because b should come first, because a.name > b.name');
+                	return 1;
                 }
                 return 0
 	        }});
