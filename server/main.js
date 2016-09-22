@@ -62,39 +62,62 @@ Meteor.methods({
         if (!(Meteor.user() && Meteor.user().services)) {
             return false;
         }
-        var user = Meteor.user().services.facebook
+        let user = Meteor.user().services.facebook
     	fbgraph.setAccessToken(user.accessToken);
-        var getFriends = function(s) {
+    	let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link')
+        let getFriends = function(s) {
             fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
                 if (res.paging && res.paging.next) {
                     getFriends(res.paging.next)
                 }
 
                 for (var i = 0; i < res["data"].length; i++) {
-                    var datum = res["data"][i];
+                    let friend_info = res["data"][i]
 
-                    datum["senderId"]=user.id;
-                    datum["senderMeteorId"] = Meteor.userId()
+                    let datum = {};
+                    datum.picture = friend_info.picture;
+                    datum.link = friend_info.link;
+                    datum.name = friend_info.name;
+                    datum.id = friend_info.id;
 
                     var selector = {};
-                    selector["senderId"] = datum["senderId"];
-                    selector["senderMeteorId"] = Meteor.userId()
-                    selector["id"] = datum["id"];
+                    selector["senderId"] = user.id;
+                    selector["senderMeteorId"] = Meteor.userId();
+                    selector["id"] = friend_info.id;
+                    Object.assign(datum, selector)
 
                     Friends.upsert(selector, datum);
+
+                    let friendUserData = UserData.findOne({"id":friend_info.id});
+                    if (friendUserData) {
+                        let friendMeteorId = UserData.findOne({"id":friend_info.id}).meteorId;
+
+                        let reciprocal_datum = {}
+                        reciprocal_datum.picture = my_info .picture;
+                        reciprocal_datum.link = my_info.link;
+                        reciprocal_datum.name = my_info.name;
+                        reciprocal_datum.id = my_info.id;
+
+                        let reciprocal_selector = {}
+                        reciprocal_selector["senderId"] = friend_info.id;
+                        reciprocal_selector["senderMeteorId"] = friendMeteorId;
+                        reciprocal_selector["id"] = my_info.id;
+                        Object.assign(reciprocal_datum, reciprocal_selector)
+
+                        Friends.upsert(reciprocal_selector, reciprocal_datum);
+                    }
+
                 }
             }));
         }
         getFriends('me/friends?fields=picture,name,link');
-    	var data = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name')
-    	var picture = Meteor.wrapAsync(fbgraph.get)('me?fields=picture').picture
-        var selector = {"id":user.id}
-        var doc = {
+        let selector = {"id":user.id}
+        let doc = {
             "id":user.id,
-            "email":data.email,
-            "name":data.name,
+            "email":my_info.email,
+            "name":my_info.name,
             "meteorId":Meteor.userId(),
-            "picture":picture,
+            "picture":my_info.picture,
         }
         UserData.upsert(selector, doc)
     	return true;
