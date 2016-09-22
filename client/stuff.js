@@ -69,12 +69,6 @@ class ListCtrl {
                 if (b.reciprocates && !a.reciprocates) {
                     return 1
                 }
-                //XXX reverse the next two signs
-                console.log("comparing...");
-                console.log(a)
-                console.log(b)
-                console.log(a.registered_date);
-                console.log(b.registered_date);
                 if (b.registered_date == undefined && a.registered_date !== undefined) {
                     return -1
                 }
@@ -86,6 +80,9 @@ class ListCtrl {
                 }
                 if (a.registered_date < b.registered_date) {
                     return 1
+                }
+                if (a.name < b.name) {
+                	return -1;
                 }
                 return 0
 	        }});
