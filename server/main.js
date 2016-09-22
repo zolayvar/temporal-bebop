@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import fbgraph from 'fbgraph';
 import { Relations, Friends, UserData, Notes, LastReciprocated } from '../both/collections.js'
+import { appId, appSecret } from './local-social-config.js'
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -49,6 +50,12 @@ function getName(id) {
 function getId(meteorId) {
     var doc = UserData.findOne({"meteorId":meteorId});
     return doc.id
+}
+function notify(id) {
+        let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
+        let result = Meteor.wrapAsync(fbgraph.get)(query);
+        fbgraph.post(id + "/notifications?template=Hi!&access_token="+result.access_token, (err, resp) => console.log(err, resp))
+
 }
 //function permute(doc) {
 //    newDoc = doc
@@ -110,7 +117,7 @@ Meteor.methods({
                 }
             }));
         }
-        getFriends('me/friends?fields=picture,name,link');
+        getFriends('me/friends?limit=5000&fields=picture,name,link');
         let selector = {"id":user.id}
         let doc = {
             "id":user.id,
@@ -169,6 +176,7 @@ Meteor.methods({
     },
     publishRelations : function() {
         let senderId = Meteor.user().services.facebook.id;
+    	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
         Relations.remove(
             {"senderId":senderId, "to_remove":true}
         );
