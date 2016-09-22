@@ -55,21 +55,20 @@ class ListCtrl {
 		$scope.viewModel(this);
 
 		this.helpers({
+	      relations() {
+	        return Relations.find();
+	      }
+	    });
+
+		this.helpers({
 	      friends() {
             return Friends.find({}, {sort: function(a, b) {
-                if (that.personReciprocates(a) && !that.personReciprocates(b)) {
+                if (a.reciprocates && !b.reciprocates) {
                     return -1
                 }
-                if (that.personReciprocates(b) && !that.personReciprocates(a)) {
+                if (b.reciprocates && !a.reciprocates) {
                     return 1
                 }
-                console.log("comparing...");
-                console.log(that.personReciprocates(a))
-                console.log(that.personReciprocates(b))
-                console.log(a)
-                console.log(b)
-                console.log(a.registered_date);
-                console.log(b.registered_date);
                 if (b.registered_date == undefined && a.registered_date !== undefined) {
                     return -1
                 }
@@ -82,20 +81,17 @@ class ListCtrl {
                 if (a.registered_date < b.registered_date) {
                     return 1
                 }
+                if (a.name < b.name) {
+                	return -1;
+                }
                 return 0
 	        }});
 	      }
 	    });
 
-		this.helpers({
-	      relations() {
-	        return Relations.find();
-	      }
-	    });
-
 		this.relationTypes = [
-			{type: 'dig a hole', text: 'Dig a hole'},
-			{type: 'cut down a tree', text: 'Cut down a tree'},
+			{type: 'make a sand castle', text: 'Make a sand castle'},
+			{type: 'build a snowman', text: 'Build a snowman'},
 		];
 
 		// this.relationTypes = [
@@ -165,7 +161,7 @@ class ListCtrl {
         		let sentences = resp.map(function(relation) {
         			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + relation.type + '!';
         		});
-        		sentences.push('As more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
+        		sentences.push('\nAs more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
         		dialogText = sentences.join('\n');
 
         	}
@@ -224,26 +220,6 @@ class ListCtrl {
 				// uhhhh
 			});
 		}
-	}
-
-	personReciprocates(person) {
-		if (!this.relations) {
-			return false;
-		}
-
-		return this.getAllReciprocatedRelations().some(function(relation) {
-			return relation.receiverId == person.id;
-		});
-	}
-
-	getAllReciprocatedRelations() {
-		if (!this.relations) {
-			return [];
-		}
-
-		return this.relations.filter(function(relation) {
-			return relation.reciprocated;
-		});
 	}
 
 	getRelation(receiverId, type) {
