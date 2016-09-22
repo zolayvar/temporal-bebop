@@ -75,13 +75,16 @@
 
 			<span layout="row" layour-align="end center">
 				<form style="padding-top:0" flex>
-					<md-input-container>
-						<label>Anything people should know?</label>
-						<input ng-model="$ctrl.myNoteText" style="width:200px">
-					</md-input-container>
-				  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
-				  		Save
-				  	</md-button>
+					<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
+						<md-input-container style="margin:0">
+							<label>Anything people should know?</label>
+							<input ng-model="$ctrl.myNoteText" />
+							<span class="md-caption">e.g. 'I never use the left column, looking for female friends'</span>
+						</md-input-container>
+					  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+					  		Save
+					  	</md-button>
+				  	</span>
 			  	</form>
 		  	</span>
 	  	</div>
