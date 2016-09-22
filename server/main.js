@@ -25,9 +25,11 @@ function checkAndProcessReciprocity(senderId, receiverId, type){
             subject:"Your desires have been reciprocated",
             text:"Dear " + name1 + " and " + name2 +",\n\nYou'd both like to " + type + ", consider responding to this thread to organize a time.\n\nYours,\nreciprocity.io",
         })
-        updateOnReciprocation(senderId, receiverId, type)
-        updateOnReciprocation(receiverId, senderId, type)
+        updateOnReciprocation(senderId, receiverId, type);
+        updateOnReciprocation(receiverId, senderId, type);
+        return true;
     }
+    return false;
 }
 
 function reciprocates(senderId, receiverId, type) {
@@ -180,8 +182,8 @@ Meteor.methods({
             {$set: {"published":true}},
             {multi:true}
         );
-        updated_relations.forEach(function (doc){
-            checkAndProcessReciprocity(senderId, doc.receiverId, doc.type)
+        return updated_relations.filter(function (doc){
+            return checkAndProcessReciprocity(senderId, doc.receiverId, doc.type);
         })
     },
     removeRelation : function({receiverId, type}) {

@@ -46,8 +46,9 @@ class ListCtrl {
         Meteor.subscribe("lastReciprocated")
     }
 
-	constructor($scope) {
+	constructor($scope, $mdDialog) {
 		var that = this;
+		that.mdDialog = $mdDialog;
         this.subscribeToDBs()
 
 		$scope.viewModel(this);
@@ -118,9 +119,35 @@ class ListCtrl {
         return doc.note
     }
 
-    submitSelections() {
-        Meteor.call("publishRelations", {}, function(err, resp) {
+    getFbNameById(id) {
+    	return Friends.findOne({id: id});
+    }
 
+    submitSelections() {
+    	let that = this;
+
+        Meteor.call("publishRelations", {}, function(err, resp) {
+        	// Dialog text if no new reciprocations
+        	let title = 'No one loves you!';
+        	let dialogText = 'No one has reciprocated your desires.  Please check again later.';
+
+        	let hasNewReciprocations = resp.length > 0;
+        	if (hasNewReciprocations) {
+        		title = 'Your desires are reciprocated!';
+        		let sentences = resp.map(function(relation) {
+        			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + relation.type + '!';
+        		});
+        		dialogText = sentences.join('\n');
+        	}
+
+			that.mdDialog.show(
+				that.mdDialog.alert()
+					.clickOutsideToClose(true)
+					.title(title)
+					.textContent(dialogText)
+					.ariaLabel('no one loves you dialog')
+					.ok('Got it!')
+			);
         });
     }
 
@@ -167,6 +194,16 @@ class ListCtrl {
 				// uhhhh
 			});
 		}
+	}
+
+	getAllReciprocatedRelations() {
+		if (!this.relations) {
+			return [];
+		}
+
+		return this.relations.filter(function(relation) {
+			return relation.reciprocated;
+		});
 	}
 
 	getRelation(receiverId, type) {
@@ -249,6 +286,6 @@ export default List = angular.module('List', [
 	angularMeteor
 ]).component('list', {
 	templateUrl: '/client/stuff.html',
-	controller: ['$scope', ListCtrl]
+	controller: ['$scope', '$mdDialog', ListCtrl]
 });
 
