@@ -56,9 +56,33 @@ class ListCtrl {
 
 		this.helpers({
 	      friends() {
-	        return Friends.find().fetch().sort(function(a, b) {
-	        	return that.doesThisPersonReciprocateMe(a) < that.doesThisPersonReciprocateMe(b);
-	        });
+            return Friends.find({}, {sort: function(a, b) {
+                if (that.personReciprocates(a) > that.personReciprocates(b)) {
+                    return -1
+                }
+                if (that.personReciprocates(b) > that.personReciprocates(a)) {
+                    return 1
+                }
+                //XXX reverse the next two signs
+                console.log("comparing...");
+                console.log(a)
+                console.log(b)
+                console.log(a.registered_date);
+                console.log(b.registered_date);
+                if (b.registered_date == undefined && a.registered_date !== undefined) {
+                    return -1
+                }
+                if (a.registered_date == undefined && b.registered_date !== undefined) {
+                    return 1
+                }
+                if (a.registered_date > b.registered_date) {
+                    return -1
+                }
+                if (a.registered_date < b.registered_date) {
+                    return 1
+                }
+                return 0
+	        }});
 	      }
 	    });
 
@@ -201,7 +225,7 @@ class ListCtrl {
 		}
 	}
 
-	doesThisPersonReciprocateMe(person) {
+	personReciprocates(person) {
 		if (!this.relations) {
 			return false;
 		}
