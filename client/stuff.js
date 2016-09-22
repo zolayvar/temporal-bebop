@@ -131,8 +131,8 @@ class ListCtrl {
 
         Meteor.call("publishRelations", {}, function(err, resp) {
         	// Dialog text if no new reciprocations
-        	let title = 'No one loves you!';
-        	let dialogText = 'No one has reciprocated your desires.  Please check again later.';
+        	let title = 'Your selections have been submitted';
+        	let dialogText = 'Nobody has reciprocated yet. As they do, we will notify you by email and Facebook, and the tick by their name will turn green.';
 
         	let hasNewReciprocations = resp.length > 0;
         	if (hasNewReciprocations) {
