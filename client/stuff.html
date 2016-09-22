@@ -30,15 +30,15 @@
 	        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
 		</span>
 
-		<span>
+		<form>
 			<md-input-container>
 				<label>Text for under your name</label>
 				<input ng-model="$ctrl.myNoteText" style="width:400px;">
 			</md-input-container>
-		  	<md-button class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+		  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
 		  		Save
 		  	</md-button>
-	  	</span>
+	  	</form>
 	</md-list-item>
 	<div ng-repeat="friend in $ctrl.friends">
 		<md-list-item ng-class="{'colored-row': ($index + 1) % 2}" layout-padding>
