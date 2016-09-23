@@ -32,8 +32,8 @@ function checkAndProcessReciprocity(id1, id2, type){
 }
 
 function markFriendsAsReciprocating(id1, id2) {
-    Friends.update({senderId: id1, id: id2}, {$set: {reciprocates: true}});
-    Friends.update({senderId: id2, id: id1}, {$set: {reciprocates: true}});
+    Friends.update({senderId: id1, id: id2}, {$inc: {reciprocations: 1}});
+    Friends.update({senderId: id2, id: id1}, {$inc: {reciprocations: 1}});
 }
 
 function reciprocates(senderId, receiverId, type) {
@@ -86,7 +86,12 @@ Meteor.methods({
         }
         let user = Meteor.user().services.facebook
     	fbgraph.setAccessToken(user.accessToken);
-    	let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link')
+    	let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link');
+        let registerFriend = function(selector, datum) {
+            Object.assign(datum, selector);
+            Friends.upsert(selector, {$set: datum, $setOnInsert: {date_met: Date.now()}, $inc: {reciprocations: 0}})
+        }
+        
         let getFriends = function(s) {
             fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
                 if (res.paging && res.paging.next) {
@@ -102,35 +107,29 @@ Meteor.methods({
                     datum.name = friend_info.name;
                     datum.id = friend_info.id;
 
-                    let friendUserData = UserData.findOne({"id":friend_info.id});
-                    if (friendUserData) {
-                        datum.registered_date = friendUserData.registered_date;
-                    }
-
                     var selector = {};
                     selector["senderId"] = user.id;
                     selector["senderMeteorId"] = Meteor.userId();
                     selector["id"] = friend_info.id;
-                    Object.assign(datum, selector)
 
-                    Friends.upsert(selector, {$set: datum});
+                    registerFriend(selector, datum)
 
+                    let friendUserData = UserData.findOne({"id":friend_info.id});
                     if (friendUserData) {
                         let friendMeteorId = friendUserData.meteorId;
 
-                        let reciprocal_datum = {}
-                        reciprocal_datum.picture = my_info .picture;
-                        reciprocal_datum.link = my_info.link;
-                        reciprocal_datum.name = my_info.name;
-                        reciprocal_datum.id = my_info.id;
+                        let reciprocalDatum = {}
+                        reciprocalDatum.picture = my_info .picture;
+                        reciprocalDatum.link = my_info.link;
+                        reciprocalDatum.name = my_info.name;
+                        reciprocalDatum.id = my_info.id;
 
-                        let reciprocal_selector = {}
-                        reciprocal_selector["senderId"] = friend_info.id;
-                        reciprocal_selector["senderMeteorId"] = friendMeteorId;
-                        reciprocal_selector["id"] = my_info.id;
-                        Object.assign(reciprocal_datum, reciprocal_selector)
+                        let reciprocalSelector = {}
+                        reciprocalSelector["senderId"] = friend_info.id;
+                        reciprocalSelector["senderMeteorId"] = friendMeteorId;
+                        reciprocalSelector["id"] = my_info.id;
 
-                        Friends.upsert(reciprocal_selector, {$set: reciprocal_datum});
+                        registerFriend(reciprocalSelector, reciprocalDatum)
                     }
 
                 }
@@ -145,12 +144,7 @@ Meteor.methods({
             "meteorId":Meteor.userId(),
             "picture":my_info.picture,
         }
-        let affected = UserData.upsert(selector, {$set: doc});
-        if (affected.insertedId) {
-            let set_time = {$set: {"registered_date":Date.now()}};
-            UserData.update({"id":user.id}, set_time);
-            Friends.update({"id":user.id}, set_time);
-        }
+        UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":Date.now()}});
     	return true;
     },
     notify : function({receiverId, type}) {
@@ -190,11 +184,11 @@ Meteor.methods({
             let selector = {"senderId":senderId, "receiverId":receiverId,
                 "type":type, "reciprocated":false};
             let doc = {
-                $set: {"senderId":senderId, "receiverId":receiverId,
+                "senderId":senderId, "receiverId":receiverId,
                 "type":type,
                 "senderMeteorId":Meteor.userId(),
                 "published":false, "to_remove":false, "reciprocated":false,
-                "alerted":false}
+                "alerted":false
             };
             Relations.upsert(selector, {$set: doc});
         }

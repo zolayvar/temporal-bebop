@@ -15,11 +15,6 @@ Meteor.methods({
         doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
             "senderMeteorId":Meteor.userId()};
         Relations.insert(doc);
-        if (!this.isSimulation){
-            if (reciprocates(senderId, receiverId, type)) {
-                processPair(senderId, receiverId, type);
-            }
-        }
     },
     removeRelation : function({receiverId, type}) {
         var senderId = Meteor.user().services.facebook.id;
@@ -62,42 +57,43 @@ class ListCtrl {
 
 		this.helpers({
 	      friends() {
-            return Friends.find({}, {sort: function(a, b) {
-            	console.log('sorting ', a, b);
-                if (a.reciprocates && !b.reciprocates) {
-                	console.log('returning -1, because a should come first, because a reciprocated and b doesnt');
-                    return -1
-                }
-                if (b.reciprocates && !a.reciprocates) {
-                	console.log('returning 1, because b should come first, because b reciprocated and a doesnt');
-                    return 1
-                }
-                if (b.registered_date == undefined && a.registered_date !== undefined) {
-                	console.log('returning -1, because a should come first, because a has registered_date and b doesnt');
-                    return -1
-                }
-                if (a.registered_date == undefined && b.registered_date !== undefined) {
-                	console.log('returning 1, because b should come first, because b has registered_date and a doesnt');
-                    return 1
-                }
-                if (a.registered_date > b.registered_date) {
-                	console.log('returning -1, because a should come first, because a.registered_date > b.registered_date');
-                    return -1
-                }
-                if (a.registered_date < b.registered_date) {
-                	console.log('returning 1, because b should come first, because b.registerUser > a.registered_date');
-                    return 1
-                }
-                if (a.name < b.name) {
-                	console.log('returning -1, because a should come first, because a.name < b.name');
-                	return -1;
-                }
-                if (a.name > b.name) {
-                	console.log('returning 1, because b should come first, because a.name > b.name');
-                	return 1;
-                }
-                return 0
-	        }});
+              return Friends.find({}, {sort: [["reciprocations", "desc"], ["date_met", "desc"]]})
+            //return Friends.find({}, {sort: function(a, b) {
+            //	console.log('sorting ', a, b);
+            //    if (a.reciprocates && !b.reciprocates) {
+            //    	console.log('returning -1, because a should come first, because a reciprocated and b doesnt');
+            //        return -1
+            //    }
+            //    if (b.reciprocates && !a.reciprocates) {
+            //    	console.log('returning 1, because b should come first, because b reciprocated and a doesnt');
+            //        return 1
+            //    }
+            //    if (b.registered_date == undefined && a.registered_date !== undefined) {
+            //    	console.log('returning -1, because a should come first, because a has registered_date and b doesnt');
+            //        return -1
+            //    }
+            //    if (a.registered_date == undefined && b.registered_date !== undefined) {
+            //    	console.log('returning 1, because b should come first, because b has registered_date and a doesnt');
+            //        return 1
+            //    }
+            //    if (a.registered_date > b.registered_date) {
+            //    	console.log('returning -1, because a should come first, because a.registered_date > b.registered_date');
+            //        return -1
+            //    }
+            //    if (a.registered_date < b.registered_date) {
+            //    	console.log('returning 1, because b should come first, because b.registerUser > a.registered_date');
+            //        return 1
+            //    }
+            //    if (a.name < b.name) {
+            //    	console.log('returning -1, because a should come first, because a.name < b.name');
+            //    	return -1;
+            //    }
+            //    if (a.name > b.name) {
+            //    	console.log('returning 1, because b should come first, because a.name > b.name');
+            //    	return 1;
+            //    }
+            //    return 0
+	        //}});
 	      }
 	    });
 
