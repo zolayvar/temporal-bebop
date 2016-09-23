@@ -72,11 +72,11 @@ class ListCtrl {
                 	console.log('returning 1, because b should come first, because b reciprocated and a doesnt');
                     return 1
                 }
-                if (b.registered_date == undefined && a.registered_date !== undefined) {
+                if (b.registered_date == null && a.registered_date !== null) {
                 	console.log('returning -1, because a should come first, because a has registered_date and b doesnt');
                     return -1
                 }
-                if (a.registered_date == undefined && b.registered_date !== undefined) {
+                if (a.registered_date == null && b.registered_date !== null) {
                 	console.log('returning 1, because b should come first, because b has registered_date and a doesnt');
                     return 1
                 }
