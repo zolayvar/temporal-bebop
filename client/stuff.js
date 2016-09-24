@@ -11,17 +11,17 @@ relations = Relations;
 //I don't remember why this caused a problem before, probably some dumb reason
 Meteor.methods({
     addRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        doc = {"senderId":senderId, "receiverId":receiverId, "type":type,
-            "senderMeteorId":Meteor.userId()};
-        Relations.insert(doc);
+        let senderId = Meteor.user().services.facebook.id;
+        let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        let doc = {"presentLocally":true, "senderMeteorId":Meteor.userId(), "reciprocated":false}
+        Object.assign(doc, selector);
+        Relations.upsert(selector, {$set: doc})
     },
     removeRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        Relations.remove({"senderId":senderId, "receiverId":receiverId, "type":type, "reciprocated":false})
-        //permute(doc).forEach(function (x){
-        //    Queue.remove(x)
-        //})
+        let senderId = Meteor.user().services.facebook.id;
+        let selector = {"senderId":senderId, "receiverId":receiverId, "type":type, "reciprocated":false};
+        let doc = {"presentLocally":false}
+        Relations.update(selector, {$set: doc})
     },
     setNote : function({note}) {
         var id = Meteor.user().services.facebook.id;
@@ -207,14 +207,14 @@ class ListCtrl {
 	shouldBeChecked(receiverId, type) {
 		var relation = this.getRelation(receiverId, type);
 
-		return relation && !relation.to_remove;
+		return relation && relation.presentLocally;
 	}
 
 	needsSaving(receiverId, type) {
 		var relation = this.getRelation(receiverId, type);
 
-		if ((relation && !relation.published && !relation.to_remove) ||
-			(relation && relation.published && relation.to_remove)) {
+		if ((relation && !relation.presentOnServer && relation.presentLocally) ||
+			(relation && relation.presentOnServer && !relation.presentLocally)) {
 			this.somethingNeedsSaving = true;
 			return true;
 		}

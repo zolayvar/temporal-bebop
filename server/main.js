@@ -38,7 +38,7 @@ function markFriendsAsReciprocating(id1, id2) {
 
 function reciprocates(senderId, receiverId, type) {
     var result = Relations.findOne({"senderId":receiverId, "receiverId":senderId, "type":type});
-    var reciprocated = !(typeof result == 'undefined') && (result.published === true)
+    var reciprocated = !(typeof result == 'undefined') && (result.presentOnServer === true)
     return reciprocated
 }
 function getEmail(id) {
@@ -177,46 +177,36 @@ Meteor.methods({
     },
     addRelation : function({receiverId, type}) {
         let senderId = Meteor.user().services.facebook.id;
-        let unremoveSelector = {"senderId":senderId, "receiverId":receiverId,
-            "type":type, "reciprocated":false, "to_remove":true};
-        let unremoved = Relations.update(unremoveSelector, {$set: {"to_remove":false}});
-        if (unremoved == 0) {
-            let selector = {"senderId":senderId, "receiverId":receiverId,
-                "type":type, "reciprocated":false};
-            let doc = {
-                "senderId":senderId, "receiverId":receiverId,
-                "type":type,
-                "senderMeteorId":Meteor.userId(),
-                "published":false, "to_remove":false, "reciprocated":false,
-                "alerted":false
-            };
-            Relations.upsert(selector, {$set: doc});
-        }
+        let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
+        let doc = {"presentLocally":true, "senderMeteorId":Meteor.userId(), "reciprocated":false}
+        Object.assign(doc, selector);
+        Relations.upsert(selector, {$set: doc})
+    },
+    removeRelation : function({receiverId, type}) {
+        let senderId = Meteor.user().services.facebook.id;
+        let selector = {"senderId":senderId, "receiverId":receiverId, "type":type, "reciprocated":false};
+        let doc = {"presentLocally":false}
+        Relations.update(selector, {$set: doc})
     },
     publishRelations : function() {
         let senderId = Meteor.user().services.facebook.id;
     	fbgraph.setAccessToken(Meteor.user().services.facebook.accessToken);
         Relations.remove(
-            {"senderId":senderId, "to_remove":true}
+            {"senderId":senderId, "presentLocally":false}
         );
-        let updated_relations = Relations.find(
-            {"senderId":senderId, "published":false}
-        ).fetch();
+        let updated_relations = Relations.find({$and:[
+            {"senderId":senderId},
+            {$or:[ {"presentOnServer":{$exists: false}}, {"presentOnServer":false} ]},
+            {"presentLocally":true},
+        ]}).fetch();
         Relations.update(
-            {"senderId":senderId, "published":false},
-            {$set: {"published":true}},
+            {"senderId":senderId, "presentLocally":true},
+            {$set: {"presentOnServer":true}},
             {multi:true}
         );
         return updated_relations.filter(function (doc){
             return checkAndProcessReciprocity(senderId, doc.receiverId, doc.type);
         })
-    },
-    removeRelation : function({receiverId, type}) {
-        var senderId = Meteor.user().services.facebook.id;
-        Relations.update(
-            {"senderId":senderId, "receiverId":receiverId, "type":type, "reciprocated":false},
-            {$set: {"to_remove":true}}
-        )
     },
     getRelations : function() {
         var cursor = Relations.find({"senderId":Meteor.user().services.facebook.id});
