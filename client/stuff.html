@@ -1,182 +1,184 @@
-<div ng-if="$ctrl.getUserName()" style="width: 100%; background:white">
-	<md-toolbar layout="row">
-		<div class="md-toolbar-tools" layout="row" layout-align="end center" flex>
-			<div ng-if="$ctrl.getUserName()">
-				{{$ctrl.getUserName()}}
-				<button md-button
-						class="md-raised"
-						ng-click="$ctrl.logout()">Logout</button>
+<div id="root" layout="column" layout-align="center center" ng-show="!$ctrl.loggingIn()">
+	<div ng-if="$ctrl.getUserName()" style="background:white;">
+		<md-toolbar layout="row">
+			<div class="md-toolbar-tools" layout="row" layout-align="end center" flex>
+				<div ng-if="$ctrl.getUserName()">
+					{{$ctrl.getUserName()}}
+					<button md-button
+							class="md-raised"
+							ng-click="$ctrl.logout()">Logout</button>
+				</div>
 			</div>
-		</div>
-	</md-toolbar>
-	<div style="text-align:center;background-opacity:.1" class="colored-row md-whiteframe-1dp">
-		<div class="md-whiteframe-1dp" layout-padding>
-			<div layout="column" layout-align="center center">
+		</md-toolbar>
+		<div style="text-align:center;background-opacity:.1" class="colored-row md-whiteframe-1dp">
+			<div class="md-whiteframe-1dp" layout-padding>
+				<div layout="column" layout-align="center center">
+					<div>
+						What would you do, if they wanted to too?<br>
+					</div>
+				</div>
+
+				<div ng-if="$ctrl.getUserName()">
+					<a href="javascript:void(0);"
+							class="md-caption"
+							style="color:black;"
+							ng-click="$ctrl.showHelpText = !$ctrl.showHelpText">{{showHelpText ? 'Hide instructions' : 'Show instructions'}}</a>
+				</div>
+			</div>
+
+			<div layout="column" layout-align="center center" ng-if="$ctrl.showHelpText" layout-padding>
 				<div>
-					What would you do, if they wanted to too?<br>
+					Select things you would do with people.
+					( <md-checkbox ng-checked="true" class="needs-saving katjas-boxes"></md-checkbox> = unsaved selection )
 				</div>
-			</div>
 
-			<div ng-if="$ctrl.getUserName()">
-				<a href="javascript:void(0);"
-						class="md-caption"
-						style="color:black;"
-						ng-click="$ctrl.showHelpText = !$ctrl.showHelpText">{{showHelpText ? 'Hide instructions' : 'Show instructions'}}</a>
+				<div>
+					Press
+					<md-button style="line-height: 24px;min-height: 24px;margin: 0;"
+							class="md-raised md-primary"
+				    		aria-label="Submit"
+				    		ng-click="$ctrl.submitSelections()"
+				    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
+				    		ng-attr-title="Check some boxes to begin your journey"
+				    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
+				    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
+				      	Submit selections
+				    </md-button>.
+				</div>
+
+				<div>
+				    Find out if they reciprocate.
+
+					( <md-checkbox ng-checked="true" class="is-checked is-reciprocated katjas-boxes"></md-checkbox> = yes,
+					<md-checkbox ng-checked="true" class="is-checked katjas-boxes"></md-checkbox> = no (yet) )
+				</div>
+
+				<div>
+					If they never reciprocate, nobody knows you tried!
+				</div>
+
+				<div>
+					If they do, you can do the thing!
+				</div>
 			</div>
 		</div>
 
-		<div layout="column" layout-align="center center" ng-if="$ctrl.showHelpText" layout-padding>
-			<div>
-				Select things you would do with people.
-				( <md-checkbox ng-checked="true" class="needs-saving katjas-boxes"></md-checkbox> = unsaved selection )
-			</div>
+		<md-list ng-if="$ctrl.getUserName()" style="padding-top:0">
+			<md-list-item>
+				<div layout="column" layout-align="start start"
+						layout-gt-sm="row" layout-align-gt-sm="start center"
+						layout-padding flex>
+					<span layout="row" layout-align="start center" flex>
+						<img ng-src="{{$ctrl.getUserData().picture.data.url}}"></img>
 
-			<div>
-				Press
-				<md-button style="line-height: 24px;min-height: 24px;margin: 0;"
-						class="md-raised md-primary"
-			    		aria-label="Submit"
-			    		ng-click="$ctrl.submitSelections()"
-			    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
-			    		ng-attr-title="Check some boxes to begin your journey"
-			    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
-			    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
-			      	Submit selections
-			    </md-button>.
-			</div>
+						&nbsp;&nbsp;&nbsp;
 
-			<div>
-			    Find out if they reciprocate.
-
-				( <md-checkbox ng-checked="true" class="is-checked is-reciprocated katjas-boxes"></md-checkbox> = yes,
-				<md-checkbox ng-checked="true" class="is-checked katjas-boxes"></md-checkbox> = no (yet) )
-			</div>
-
-			<div>
-				If they never reciprocate, nobody knows you tried!
-			</div>
-
-			<div>
-				If they do, you can do the thing!
-			</div>
-		</div>
-	</div>
-
-	<md-list ng-if="$ctrl.getUserName()" style="padding-top:0">
-		<md-list-item>
-			<div layout="column" layout-align="start start"
-					layout-gt-sm="row" layout-align-gt-sm="start center"
-					layout-padding flex>
-				<span layout="row" layout-align="start center" flex>
-					<img ng-src="{{$ctrl.getUserData().picture.data.url}}"></img>
-
-					&nbsp;&nbsp;&nbsp;
-
-					<span layout="column" flex>
-						<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
-							{{$ctrl.getUserName()}}
-						</a>
-				        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
-					</span>
-				</span>
-
-				<span layout="row" layour-align="end center">
-					<form style="padding-top:0" flex>
-						<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
-							<md-input-container style="margin:0">
-								<label>Anything people should know?</label>
-								<input ng-model="$ctrl.myNoteText" md-maxlength="140"/>
-								<span class="md-caption">e.g. 'I don't use this for dating, and I'm mostly looking for female friends'</span>
-							</md-input-container>
-						  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
-						  		Save
-						  	</md-button>
-					  	</span>
-				  	</form>
-			  	</span>
-		  	</div>
-		</md-list-item>
-		<md-progress-circular md-mode="indeterminate"
-				ng-if="!$ctrl.friends"></md-progress-circular>
-		<md-list-item ng-repeat="friend in $ctrl.friends"
-				ng-class="{'colored-row': ($index + 1) % 2}">
-			<div layout="column" layout-align="start start"
-					layout-gt-sm="row" layout-align-gt-sm="start center"
-					layout-padding flex>
-				<div layout="row" layout-align="start center" flex>
-					<img ng-src="{{friend.picture.data.url}}"></img>
-
-					&nbsp;&nbsp;&nbsp;
-
-					<span layout="column" flex>
-						<a ng-href="{{friend.link}}" target="_blank">
-	                        {{friend.name}}
-						</a>
-				        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
-					</span>
-				</div>
-
-				<div layout="column" layout-gt-sm="row" layout-align="start end" layout-align-gt-sm="end center" style="width:100%" flex>
-					<span ng-repeat="relationType in $ctrl.relationTypes">
-						<span layout="row" style="padding-top:4px;">
-							&nbsp;&nbsp;{{relationType.text}}&nbsp;
-							<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
-									ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
-									ng-class="{
-											'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
-											'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
-											'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
-										}"
-									aria-label="relationType"></md-checkbox>
+						<span layout="column" flex>
+							<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
+								{{$ctrl.getUserName()}}
+							</a>
+					        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
 						</span>
 					</span>
+
+					<span layout="row" layour-align="end center">
+						<form style="padding-top:0" flex>
+							<span layout="column" layout-align="start end" layout-gt-sm="row" layout-align-gt-sm="end center">
+								<md-input-container style="margin:0">
+									<label>Anything people should know?</label>
+									<input ng-model="$ctrl.myNoteText" md-maxlength="140"/>
+									<span class="md-caption">e.g. 'I don't use this for dating, and I'm mostly looking for female friends'</span>
+								</md-input-container>
+							  	<md-button type="submit" class="md-raised" aria-label="Save note" ng-click="$ctrl.setNote()">
+							  		Save
+							  	</md-button>
+						  	</span>
+					  	</form>
+				  	</span>
+			  	</div>
+			</md-list-item>
+			<md-progress-circular md-mode="indeterminate"
+					ng-if="!$ctrl.friends"></md-progress-circular>
+			<md-list-item ng-repeat="friend in $ctrl.friends"
+					ng-class="{'colored-row': ($index + 1) % 2}">
+				<div layout="column" layout-align="start start"
+						layout-gt-sm="row" layout-align-gt-sm="start center"
+						layout-padding flex>
+					<div layout="row" layout-align="start center" flex>
+						<img ng-src="{{friend.picture.data.url}}"></img>
+
+						&nbsp;&nbsp;&nbsp;
+
+						<span layout="column" flex>
+							<a ng-href="{{friend.link}}" target="_blank">
+		                        {{friend.name}}
+							</a>
+					        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
+						</span>
+					</div>
+
+					<div layout="column" layout-gt-sm="row" layout-align="start end" layout-align-gt-sm="end center" style="width:100%" flex>
+						<span ng-repeat="relationType in $ctrl.relationTypes">
+							<span layout="row" style="padding-top:4px;">
+								&nbsp;&nbsp;{{relationType.text}}&nbsp;
+								<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+										ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
+										ng-class="{
+												'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
+												'is-checked': $ctrl.shouldBeChecked(friend.id, relationType.type),
+												'is-reciprocated': $ctrl.getRelation(friend.id, relationType.type).reciprocated,
+											}"
+										aria-label="relationType"></md-checkbox>
+							</span>
+						</span>
+					</div>
 				</div>
-			</div>
-		</md-list-item>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-	</md-list>
+			</md-list-item>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+		</md-list>
 
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 
-	<div class="bottom-bar md-whiteframe-1dp" ng-if="$ctrl.getUserName()">
-	  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px; border-top:1px solid rgba(0,0,0,.05);">
-	    <span flex></span>
-		<md-progress-circular md-mode="indeterminate"
-				ng-if="$ctrl.isSubmitting"></md-progress-circular>
-	    <md-button class="md-raised md-primary"
-	    		aria-label="Submit"
-	    		ng-click="$ctrl.submitSelections()"
-	    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
-	    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
-	    	<md-tooltip md-direction="top" md-delay="500">Submit your selections to enable reciprocation</md-tooltip>
-	      	Submit selections
-	    </md-button>
-	    &nbsp;&nbsp;&nbsp;
-	  </div>
+		<div class="bottom-bar md-whiteframe-1dp" ng-if="$ctrl.getUserName()">
+		  <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px; border-top:1px solid rgba(0,0,0,.05);">
+		    <span flex></span>
+			<md-progress-circular md-mode="indeterminate"
+					ng-if="$ctrl.isSubmitting"></md-progress-circular>
+		    <md-button class="md-raised md-primary"
+		    		aria-label="Submit"
+		    		ng-click="$ctrl.submitSelections()"
+		    		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
+		    		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
+		    	<md-tooltip md-direction="top" md-delay="500">Submit your selections to enable reciprocation</md-tooltip>
+		      	Submit selections
+		    </md-button>
+		    &nbsp;&nbsp;&nbsp;
+		  </div>
+		</div>
 	</div>
-</div>
 
-<div ng-if="!$ctrl.getUserName()" layout="column" layout-align="center center" style="height:100%;font-size:24px;">
-	<br><br>
-	<div style="font-size:9vw;color:#777;font-weight:300;">reciprocity.io</div>
-	<br><br><br>
-	<md-progress-circular md-mode="indeterminate"
-			ng-if="$ctrl.clickedLogin"></md-progress-circular>
-	<button md-button
-			class="md-raised md-primary"
-			ng-click="$ctrl.login()"
-			ng-if="!$ctrl.clickedLogin">
-		Login with Facebook
-	</button>
-	<br><br><br><br><br>
+	<div ng-if="!$ctrl.getUserName()" layout="column" layout-align="center center" style="height:100%;font-size:24px;">
+		<br><br>
+		<div style="font-size:9vw;color:#777;font-weight:300;">reciprocity.io</div>
+		<br><br><br>
+		<md-progress-circular md-mode="indeterminate"
+				ng-if="$ctrl.clickedLogin"></md-progress-circular>
+		<button md-button
+				class="md-raised md-primary"
+				ng-click="$ctrl.login()"
+				ng-if="!$ctrl.clickedLogin">
+			Login with Facebook
+		</button>
+		<br><br><br><br><br>
+	</div>
 </div>
