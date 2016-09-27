@@ -61,7 +61,7 @@ function emailForReciprocity(email1, email2, name1, name2, type){
         cc: [email1, email2],
         from:"meddler@reciprocity.io",
         subject:"Reciprocation!",
-        text:"Dear " + name1 + " and " + name2 +",\n\nGood news! You both want to " + type + ", you can use this thread to organize if you want.\n\nYours,\nreciprocity.io",
+        html:"Dear " + name1 + " and " + name2 +",<br><br>Good news! You both want to " + type + ". You can use this thread to organize if you want.<br><br>Love,<br>Paul, Katja, and Steph",
     });
 }
 function notifyForReciprocity(id1, name2, type) {
