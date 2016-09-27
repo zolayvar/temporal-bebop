@@ -247,6 +247,7 @@ class ListCtrl {
 
 	setNote(noteText) {
 		Meteor.call('setNote', {note: this.myNoteText});
+		this.myNoteText = '';
 	}
 
 	login() {

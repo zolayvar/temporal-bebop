@@ -12,7 +12,7 @@
 	<div class="md-whiteframe-1dp" layout-padding>
 		<div layout="column" layout-align="center center">
 			<div>
-				What would you like to do with which friends, if you knew that they wanted to?<br>
+				What would you do, if they wanted to too?<br>
 			</div>
 		</div>
 
@@ -68,7 +68,8 @@
 	<br><br><br><br>
 	<button md-button
 			class="md-raised md-primary"
-			ng-click="$ctrl.login()">
+			ng-click="$ctrl.login()"
+			ng-if="!$ctrl.hasUser()">
 		Login with Facebook
 	</button>
 </div>
@@ -107,6 +108,8 @@
 		  	</span>
 	  	</div>
 	</md-list-item>
+	<md-progress-circular md-mode="indeterminate"
+			ng-if="!$ctrl.friends"></md-progress-circular>
 	<md-list-item ng-repeat="friend in $ctrl.friends"
 			ng-class="{'colored-row': ($index + 1) % 2}">
 		<div layout="column" layout-align="start start"
