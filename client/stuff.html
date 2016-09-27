@@ -66,10 +66,12 @@
 	<br><br><br><br>
 	<br><br><br><br>
 	<br><br><br><br>
+	<md-progress-circular md-mode="indeterminate"
+			ng-if="$ctrl.clickedLogin"></md-progress-circular>
 	<button md-button
 			class="md-raised md-primary"
 			ng-click="$ctrl.login()"
-			ng-if="!$ctrl.hasUser()">
+			ng-if="!$ctrl.clickedLogin">
 		Login with Facebook
 	</button>
 </div>
@@ -145,6 +147,12 @@
 			</div>
 		</div>
 	</md-list-item>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 </md-list>
 
 <br>
