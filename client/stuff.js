@@ -256,6 +256,7 @@ class ListCtrl {
 
 	login() {
         var that = this;
+        that.clickedLogin = true;
 		Meteor.loginWithFacebook({requestPermissions: ['user_friends', 'email']}, function(err, resp){
 			if (err) {
 				throw new Meteor.Error("Facebook login failed");
@@ -267,6 +268,7 @@ class ListCtrl {
 	}
 
 	logout() {
+        this.clickedLogin = false;
 		Meteor.logout(function(err){
             if (err) {
                 throw new Meteor.Error("Logout failed");
