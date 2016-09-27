@@ -62,8 +62,8 @@ class ListCtrl {
 	    });
 
 		this.relationTypes = [
-			{type: 'bake a cake', text: 'Bake a cake'},
-			{type: 'write a manifesto', text: 'Write a manifesto'},
+			{type: 'hang out soon', text: 'Hang out soon'},
+			{type: 'date or something', text: 'Date or something'},
 		];
 
 		// this.relationTypes = [
