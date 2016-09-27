@@ -1,4 +1,4 @@
-<div id="root" layout="column" layout-align="center center" ng-show="!$ctrl.loggingIn()">
+<div id="root" layout="column" layout-align="center center" ng-show="!$ctrl.loggingIn()" ng-class="{'not-logged-in': !$ctrl.getUserName()}">
 	<div ng-if="$ctrl.getUserName()" style="background:white;">
 		<md-toolbar layout="row">
 			<div class="md-toolbar-tools" layout="row" layout-align="end center" flex>
