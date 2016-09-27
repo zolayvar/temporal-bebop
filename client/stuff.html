@@ -122,6 +122,7 @@
 							<span layout="row" style="padding-top:4px;">
 								&nbsp;&nbsp;{{relationType.text}}&nbsp;
 								<md-checkbox ng-click="$ctrl.toggleRelation(friend.id, relationType.type)"
+										ng-disabled="$ctrl.getRelation(friend.id, relationType.type).reciprocated"
 										ng-checked="$ctrl.shouldBeChecked(friend.id, relationType.type)"
 										ng-class="{
 												'needs-saving': $ctrl.needsSaving(friend.id, relationType.type),
