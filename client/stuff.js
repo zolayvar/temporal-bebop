@@ -122,6 +122,8 @@ class ListCtrl {
     submitSelections() {
     	let that = this;
 
+    	that.isSubmitting = true;
+
         Meteor.call("publishRelations", {}, function(err, resp) {
         	// Dialog text if no new reciprocations
         	let title = 'Your selections have been submitted';
@@ -137,6 +139,8 @@ class ListCtrl {
         		dialogText = sentences.join('\n');
 
         	}
+
+        	that.isSubmitting = false;
 
 			that.mdDialog.show(
 				that.mdDialog.alert()

@@ -157,13 +157,14 @@
 <div class="bottom-bar md-whiteframe-1dp" ng-if="$ctrl.getUserName()">
   <div class="md-toolbar-tools" style="position:fixed; width:100%; bottom:0; background:white; font:16px; border-top:1px solid rgba(0,0,0,.05);">
     <span flex></span>
+	<md-progress-circular md-mode="indeterminate"
+			ng-if="$ctrl.isSubmitting"></md-progress-circular>
     <md-button class="md-raised md-primary"
     		aria-label="Submit"
     		ng-click="$ctrl.submitSelections()"
     		ng-disabled="!$ctrl.doesSomethingNeedSaving()"
-    		ng-attr-title="Check some boxes to begin your journey"
     		ng-class="{'submit-needed': $ctrl.doesSomethingNeedSaving()}">
-    	<md-tooltip md-direction="top">Submit your selections to enable reciprocation</md-tooltip>
+    	<md-tooltip md-direction="top" md-delay="500">Submit your selections to enable reciprocation</md-tooltip>
       	Submit selections
     </md-button>
     &nbsp;&nbsp;&nbsp;
