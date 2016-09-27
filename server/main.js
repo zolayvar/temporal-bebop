@@ -65,7 +65,7 @@ function emailForReciprocity(email1, email2, name1, name2, type){
     });
 }
 function notifyForReciprocity(id1, name2, type) {
-    notify(id1, "You and " + name2 + " both want to " + type + ".")
+    notify(id1, "Something has happened!")
 }
 function notify(id, message) {
     let query = "/oauth/access_token?client_id="+appId+"&client_secret="+appSecret+"&grant_type=client_credentials";
