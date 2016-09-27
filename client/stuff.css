@@ -43,3 +43,25 @@ md-checkbox {
 md-dialog .md-dialog-content {
 	white-space: pre-wrap;
 }
+
+#root {
+	height: 100%;
+	width:100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+#root::after {
+	background: url('giraffes.jpg');
+	height: 100%;
+	width:100%;
+	opacity: .3;
+  content: "";
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
