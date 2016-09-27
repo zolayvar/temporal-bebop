@@ -57,10 +57,12 @@ function getId(meteorId) {
     return doc.id
 }
 function emailForReciprocity(email1, email2, name1, name2, type){
+    firstname1 = name1.split(" ")[0];
+    firstname2 = name2.split(" ")[0];
     Email.send({
         cc: [email1, email2],
         from:"meddler@reciprocity.io",
-        subject:"Reciprocation!",
+        subject:firstname1 + " and " + firstname2 + " want to " + type,
         html:"Dear " + name1 + " and " + name2 +",<br><br>Good news! You both want to " + type + ". You can use this thread to organize if you want.<br><br>Love,<br>Paul, Katja, and Steph",
     });
 }
