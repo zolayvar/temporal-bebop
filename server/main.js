@@ -63,6 +63,7 @@ function emailForReciprocity(email1, email2, name1, name2, type){
         cc: [email1, email2],
         from:"meddler@reciprocity.io",
         subject:firstname1 + " and " + firstname2 + " want to " + type,
+        replyTo:"meddler@mg2.reciprocity.io",
         html:"Dear " + name1 + " and " + name2 +",<br><br>Good news! You both want to " + type + ". You can use this thread to organize if you want.<br><br>Love,<br>Paul, Katja, and Steph",
     });
 }
