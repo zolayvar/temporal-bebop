@@ -170,7 +170,10 @@
 
 	<div ng-if="!$ctrl.getUserName()" layout="column" layout-align="center center" style="height:100%;font-size:24px;">
 		<br><br>
-		<div style="font-size:9vw;color:#777;font-weight:300;">reciprocity.io</div>
+		<div class="md-whiteframe-1dp" style="background:#eee; width:70%; opacity:.6; text-align:center; border-radius:15px;" layout-padding>
+			<div style="font-size:8vw;font-weight:300;">reciprocity.io</div>
+			<div>Say which of your friends you want to do things with. We’ll tell you who reciprocates, and when someone doesn’t, we won't tell anyone!</div>
+		</div>
 		<br><br><br>
 		<md-progress-circular md-mode="indeterminate"
 				ng-if="$ctrl.clickedLogin"></md-progress-circular>
