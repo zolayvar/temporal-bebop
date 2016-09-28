@@ -52,11 +52,11 @@ md-dialog .md-dialog-content {
   z-index: 1;
 }
 
-#root::after {
+#root.not-logged-in::after {
 	background: url('giraffes.jpg');
 	height: 100%;
 	width:100%;
-	opacity: .3;
+	opacity: .5;
   content: "";
   top: 0;
   left: 0;

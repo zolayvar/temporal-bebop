@@ -96,6 +96,14 @@ class ListCtrl {
 		tryToGetPicture();
 
 		this.myNoteText = this.getNote();
+
+		setTimeout(function() {
+			that.halfASecondHasPassed = true;
+		}, 500);
+	}
+
+	loggingIn() {
+		return Meteor.loggingIn();
 	}
 
 	getUserData() {
