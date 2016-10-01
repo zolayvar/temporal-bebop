@@ -270,7 +270,6 @@ class ListCtrl {
 				throw new Meteor.Error("Facebook login failed");
             } else {
                 that.subscribeToDBs()
-                Meteor.call("registerUser");
             }
 		});
 	}

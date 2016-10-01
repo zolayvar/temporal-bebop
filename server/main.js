@@ -76,80 +76,91 @@ function notify(id, message) {
     fbgraph.post(id + "/notifications?template="+message+"&access_token="+result.access_token, (err, resp) => console.log(err, resp))
 }
 
+function registerUser(userToRegister) {
+    if (!(userToRegister && userToRegister.services)) {
+        return false;
+    }
+    let user = userToRegister.services.facebook;
+    fbgraph.setAccessToken(user.accessToken);
+    let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link');
+    let registerFriend = function(selector, datum) {
+        Object.assign(datum, selector);
+        Friends.upsert(selector, {$set: datum, $setOnInsert: {date_met: Date.now()}, $inc: {reciprocations: 0}})
+    }
+    let allFriends = []
+    
+    let getFriends = function(s, shouldCullNonFriends) {
+        fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
+            if (res.paging && res.paging.next) {
+                getFriends(res.paging.next, false)
+            }
+
+            for (var i = 0; i < res["data"].length; i++) {
+                let friend_info = res["data"][i]
+
+                let datum = {};
+                datum.picture = friend_info.picture;
+                datum.link = friend_info.link;
+                datum.name = friend_info.name;
+                datum.id = friend_info.id;
+
+                allFriends.push(friend_info.id)
+
+                var selector = {};
+                selector["senderId"] = user.id;
+                selector["senderMeteorId"] = userToRegister._id;
+                selector["id"] = friend_info.id;
+
+                registerFriend(selector, datum)
+
+                let friendUserData = UserData.findOne({"id":friend_info.id});
+                if (friendUserData) {
+                    let friendMeteorId = friendUserData.meteorId;
+
+                    let reciprocalDatum = {}
+                    reciprocalDatum.picture = my_info .picture;
+                    reciprocalDatum.link = my_info.link;
+                    reciprocalDatum.name = my_info.name;
+                    reciprocalDatum.id = my_info.id;
+
+                    let reciprocalSelector = {}
+                    reciprocalSelector["senderId"] = friend_info.id;
+                    reciprocalSelector["senderMeteorId"] = friendMeteorId;
+                    reciprocalSelector["id"] = my_info.id;
+
+                    registerFriend(reciprocalSelector, reciprocalDatum)
+                }
+
+            }
+            if (shouldCullNonFriends ) {
+                Friends.remove({senderId:user.id, id:{$nin:allFriends}})
+                Friends.remove({id:user.id, senderId:{$nin:allFriends}})
+            }
+        }));
+    }
+    getFriends('me/friends?limit=5000&fields=picture,name,link', true);
+    let selector = {"id":user.id}
+    let doc = {
+        "id":user.id,
+        "email":my_info.email,
+        "name":my_info.name,
+        "meteorId":userToRegister._id,
+        "picture":my_info.picture,
+    }
+    UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":Date.now()}});
+    return true;
+
+}
+
+Accounts.onLogin(function(logon){
+    registerUser(logon.user)
+})
+
+
+
 Meteor.methods({
     registerUser : function() {
-        if (!(Meteor.user() && Meteor.user().services)) {
-            return false;
-        }
-        let user = Meteor.user().services.facebook
-    	fbgraph.setAccessToken(user.accessToken);
-    	let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link');
-        let registerFriend = function(selector, datum) {
-            Object.assign(datum, selector);
-            Friends.upsert(selector, {$set: datum, $setOnInsert: {date_met: Date.now()}, $inc: {reciprocations: 0}})
-        }
-        let allFriends = []
-        
-        let getFriends = function(s, shouldCullNonFriends) {
-            fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
-                if (res.paging && res.paging.next) {
-                    getFriends(res.paging.next, false)
-                }
-
-                for (var i = 0; i < res["data"].length; i++) {
-                    let friend_info = res["data"][i]
-
-                    let datum = {};
-                    datum.picture = friend_info.picture;
-                    datum.link = friend_info.link;
-                    datum.name = friend_info.name;
-                    datum.id = friend_info.id;
-
-                    allFriends.push(friend_info.id)
-
-                    var selector = {};
-                    selector["senderId"] = user.id;
-                    selector["senderMeteorId"] = Meteor.userId();
-                    selector["id"] = friend_info.id;
-
-                    registerFriend(selector, datum)
-
-                    let friendUserData = UserData.findOne({"id":friend_info.id});
-                    if (friendUserData) {
-                        let friendMeteorId = friendUserData.meteorId;
-
-                        let reciprocalDatum = {}
-                        reciprocalDatum.picture = my_info .picture;
-                        reciprocalDatum.link = my_info.link;
-                        reciprocalDatum.name = my_info.name;
-                        reciprocalDatum.id = my_info.id;
-
-                        let reciprocalSelector = {}
-                        reciprocalSelector["senderId"] = friend_info.id;
-                        reciprocalSelector["senderMeteorId"] = friendMeteorId;
-                        reciprocalSelector["id"] = my_info.id;
-
-                        registerFriend(reciprocalSelector, reciprocalDatum)
-                    }
-
-                }
-                if (shouldCullNonFriends ) {
-                    Friends.remove({senderId:user.id, id:{$nin:allFriends}})
-                    Friends.remove({id:user.id, senderId:{$nin:allFriends}})
-                }
-            }));
-        }
-        getFriends('me/friends?limit=5000&fields=picture,name,link', true);
-        let selector = {"id":user.id}
-        let doc = {
-            "id":user.id,
-            "email":my_info.email,
-            "name":my_info.name,
-            "meteorId":Meteor.userId(),
-            "picture":my_info.picture,
-        }
-        UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":Date.now()}});
-    	return true;
+        registerUser(Meteor.user())
     },
     notify : function({receiverId, type}) {
         let senderId = Meteor.user().services.facebook.id;
