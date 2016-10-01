@@ -124,7 +124,7 @@ function registerUser(userToRegister) {
                 selector["senderMeteorId"] = userToRegister._id;
                 selector["id"] = friend_info.id;
 
-                registerFriend(selector, datum)
+                registerFriend(selector, datum, startTime)
                 let friendUserData = UserData.findOne({"id":friend_info.id});
                 if (friendUserData) {
                     let friendMeteorId = friendUserData.meteorId;
@@ -140,7 +140,7 @@ function registerUser(userToRegister) {
                     reciprocalSelector["senderMeteorId"] = friendMeteorId;
                     reciprocalSelector["id"] = myInfo.id;
 
-                    registerFriend(reciprocalSelector, reciprocalDatum)
+                    registerFriend(reciprocalSelector, reciprocalDatum, startTime)
                 }
             }
             if (shouldCullNonFriends ) {
