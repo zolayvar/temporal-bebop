@@ -4,7 +4,14 @@ import { Relations, Friends, UserData, Notes, LastReciprocated } from '../both/c
 import { appId, appSecret } from './social-config.js'
 
 Meteor.startup(() => {
-  // code to run on server at startup
+  Friends._ensureIndex({ "senderId": 1});
+  Friends._ensureIndex({ "senderMeteorId": 1});
+  Friends._ensureIndex({ "id": 1});
+  UserData._ensureIndex({ "id": 1});
+  Relations._ensureIndex({ "senderId": 1});
+  Relations._ensureIndex({ "id": 1});
+  Notes._ensureIndex({"id":1})
+  Notes._ensureIndex({"meteorId":1})
 });
 
 function updateOnReciprocation(senderId, receiverId, type){
@@ -13,7 +20,6 @@ function updateOnReciprocation(senderId, receiverId, type){
     let doc = {"senderId":senderId, "receiverId":receiverId, "type":type, "datetime":Date()}
     LastReciprocated.upsert(selector, {$set:doc})
 }
-
 function checkAndProcessReciprocity(id1, id2, type){
     if (reciprocates(id1, id2, type)) {
         email1 = getEmail(id1);
@@ -112,7 +118,6 @@ function registerUser(userToRegister) {
                 selector["id"] = friend_info.id;
 
                 registerFriend(selector, datum)
-
                 let friendUserData = UserData.findOne({"id":friend_info.id});
                 if (friendUserData) {
                     let friendMeteorId = friendUserData.meteorId;
@@ -130,7 +135,6 @@ function registerUser(userToRegister) {
 
                     registerFriend(reciprocalSelector, reciprocalDatum)
                 }
-
             }
             if (shouldCullNonFriends ) {
                 Friends.remove({senderId:user.id, id:{$nin:allFriends}})
