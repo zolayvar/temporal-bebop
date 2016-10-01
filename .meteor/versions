@@ -44,6 +44,8 @@ logging@1.1.14
 meteor@1.2.16
 meteor-base@1.0.4
 meteorhacks:async@1.0.0
+meteorhacks:kadira@2.30.0
+meteorhacks:meteorx@1.4.1
 minifier-css@1.2.13
 minifier-js@1.2.13
 minimongo@1.0.17
@@ -53,6 +55,7 @@ modules@0.7.5
 modules-runtime@0.7.5
 mongo@1.1.10
 mongo-id@1.0.5
+mongo-livedata@1.0.12
 npm-mongo@1.5.45
 oauth@1.1.11
 oauth2@1.1.10
