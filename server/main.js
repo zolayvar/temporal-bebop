@@ -9,6 +9,7 @@ Meteor.startup(() => {
   Friends._ensureIndex({ "id": 1});
   UserData._ensureIndex({ "id": 1});
   Relations._ensureIndex({ "senderId": 1});
+  Relations._ensureIndex({ "senderMeteorId": 1});
   Relations._ensureIndex({ "id": 1});
   Notes._ensureIndex({"id":1})
   Notes._ensureIndex({"meteorId":1})
@@ -88,10 +89,16 @@ function registerUser(userToRegister) {
     }
     let user = userToRegister.services.facebook;
     fbgraph.setAccessToken(user.accessToken);
-    let my_info = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link');
-    let registerFriend = function(selector, datum) {
+    let myInfo = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link');
+    let startTime = Date.now();
+    let registerFriend = function(selector, datum, startTime) {
         Object.assign(datum, selector);
-        Friends.upsert(selector, {$set: datum, $setOnInsert: {date_met: Date.now()}, $inc: {reciprocations: 0}})
+        //this causes the entries to be inserted in reverse order, preventing jostling
+        let adjustedTime = startTime - (Date.now() - startTime);
+        Friends.upsert(selector, {
+            $set: datum,
+            $setOnInsert: {date_met: adjustedTime, reciprocations:0},
+        })
     }
     let allFriends = []
     
@@ -123,15 +130,15 @@ function registerUser(userToRegister) {
                     let friendMeteorId = friendUserData.meteorId;
 
                     let reciprocalDatum = {}
-                    reciprocalDatum.picture = my_info .picture;
-                    reciprocalDatum.link = my_info.link;
-                    reciprocalDatum.name = my_info.name;
-                    reciprocalDatum.id = my_info.id;
+                    reciprocalDatum.picture = myInfo .picture;
+                    reciprocalDatum.link = myInfo.link;
+                    reciprocalDatum.name = myInfo.name;
+                    reciprocalDatum.id = myInfo.id;
 
                     let reciprocalSelector = {}
                     reciprocalSelector["senderId"] = friend_info.id;
                     reciprocalSelector["senderMeteorId"] = friendMeteorId;
-                    reciprocalSelector["id"] = my_info.id;
+                    reciprocalSelector["id"] = myInfo.id;
 
                     registerFriend(reciprocalSelector, reciprocalDatum)
                 }
@@ -146,10 +153,10 @@ function registerUser(userToRegister) {
     let selector = {"id":user.id}
     let doc = {
         "id":user.id,
-        "email":my_info.email,
-        "name":my_info.name,
+        "email":myInfo.email,
+        "name":myInfo.name,
         "meteorId":userToRegister._id,
-        "picture":my_info.picture,
+        "picture":myInfo.picture,
     }
     UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":Date.now()}});
     return true;
