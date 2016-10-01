@@ -33,8 +33,8 @@ Meteor.methods({
 class ListCtrl {
 
     subscribeToDBs() {
-        Meteor.subscribe("friends")
         Meteor.subscribe("relations")
+        Meteor.subscribe("friends")
         Meteor.subscribe("userData")
         Meteor.subscribe("meteorUserData")
         Meteor.subscribe("notes")
