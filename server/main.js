@@ -75,12 +75,6 @@ function notify(id, message) {
     let result = Meteor.wrapAsync(fbgraph.get)(query);
     fbgraph.post(id + "/notifications?template="+message+"&access_token="+result.access_token, (err, resp) => console.log(err, resp))
 }
-//function permute(doc) {
-//    newDoc = doc
-//    newDoc.senderId = doc.receiverId
-//    newDoc.receiverId = doc.senderId
-//    return [doc, newDoc]
-//}
 
 Meteor.methods({
     registerUser : function() {
@@ -94,11 +88,12 @@ Meteor.methods({
             Object.assign(datum, selector);
             Friends.upsert(selector, {$set: datum, $setOnInsert: {date_met: Date.now()}, $inc: {reciprocations: 0}})
         }
+        let allFriends = []
         
-        let getFriends = function(s) {
+        let getFriends = function(s, shouldCullNonFriends) {
             fbgraph.get(s, Meteor.bindEnvironment(function(err, res) {
                 if (res.paging && res.paging.next) {
-                    getFriends(res.paging.next)
+                    getFriends(res.paging.next, false)
                 }
 
                 for (var i = 0; i < res["data"].length; i++) {
@@ -109,6 +104,8 @@ Meteor.methods({
                     datum.link = friend_info.link;
                     datum.name = friend_info.name;
                     datum.id = friend_info.id;
+
+                    allFriends.push(friend_info.id)
 
                     var selector = {};
                     selector["senderId"] = user.id;
@@ -136,9 +133,13 @@ Meteor.methods({
                     }
 
                 }
+                if (shouldCullNonFriends ) {
+                    Friends.remove({senderId:user.id, id:{$nin:allFriends}})
+                    Friends.remove({id:user.id, senderId:{$nin:allFriends}})
+                }
             }));
         }
-        getFriends('me/friends?limit=5000&fields=picture,name,link');
+        getFriends('me/friends?limit=5000&fields=picture,name,link', true);
         let selector = {"id":user.id}
         let doc = {
             "id":user.id,
