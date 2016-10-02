@@ -19,8 +19,10 @@ if (Meteor.isServer) {
   });
   Meteor.publish('friends', function publishFriends() {
     return Friends.find({
-        senderMeteorId: this.userId
-    }, {sort: [["reciprocations", "desc"], ["date_met", "desc"]] })
+        senderMeteorId: this.userId,
+    }, {
+        sort: [["reciprocations", "desc"], ["date_met", "desc"]]
+    })
   });
   //Meteor.publish('lastReciprocated', function publishLastReciprocated() {
   //    if (!this.userId) {

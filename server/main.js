@@ -63,15 +63,23 @@ function getId(meteorId) {
     var doc = UserData.findOne({"meteorId":meteorId});
     return doc.id
 }
+function getDescription(type) {
+    let descriptions = {
+        "hang out soon": "hang out soon",
+        "date or something": "go on a date or something",
+    }
+    return descriptions[type];
+}
 function emailForReciprocity(email1, email2, name1, name2, type){
     firstname1 = name1.split(" ")[0];
     firstname2 = name2.split(" ")[0];
+    let description = getDescription(type);
     Email.send({
         cc: [email1, email2],
         from:"meddler@reciprocity.io",
-        subject:firstname1 + " and " + firstname2 + " want to " + type,
+        subject:firstname1 + " and " + firstname2 + " want to " + description,
         replyTo:"meddler@mg2.reciprocity.io",
-        html:"Dear " + name1 + " and " + name2 +",<br><br>Good news! You both want to " + type + ". You can use this thread to organize if you want.<br><br>Love,<br>Paul, Katja, and Steph",
+        html:"Dear " + name1 + " and " + name2 +",<br><br>Good news! You both want to " + description + ". You can use this thread to organize if you want.<br><br>Love,<br>Paul, Katja, and Steph",
     });
 }
 function notifyForReciprocity(id1, name2, type) {

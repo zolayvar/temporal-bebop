@@ -62,8 +62,8 @@ class ListCtrl {
 	    });
 
 		this.relationTypes = [
-			{type: 'hang out soon', text: 'Hang out soon'},
-			{type: 'date or something', text: 'Date or something'},
+			{type: 'hang out soon', text: 'Hang out soon', verb:"hang out soon"},
+			{type: 'date or something', text: 'Go on a date or something', verb:"go on a date or something"},
 		];
 
 		// this.relationTypes = [
@@ -101,6 +101,14 @@ class ListCtrl {
 			that.halfASecondHasPassed = true;
 		}, 500);
 	}
+
+    relationVerb(type) {
+        for (i = 0; i < this.relationTypes.length; i++) {
+            if (this.relationTypes[i].type == type) {
+                return this.relationTypes[i].verb
+            }
+        }
+    }
 
 	loggingIn() {
 		return Meteor.loggingIn();
@@ -141,7 +149,7 @@ class ListCtrl {
         	if (hasNewReciprocations) {
         		title = 'Your desires are reciprocated!';
         		let sentences = resp.map(function(relation) {
-        			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + relation.type + '!';
+        			return 'You and ' + that.getFbNameById(relation.receiverId).name + ' both want to ' + that.relationVerb(relation.type) + '!';
         		});
         		sentences.push('\nAs more friends reciprocate, we will notify you by email and Facebook, and the tick by their name will turn green.');
         		dialogText = sentences.join('\n');
