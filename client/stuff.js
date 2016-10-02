@@ -80,20 +80,20 @@ class ListCtrl {
 		};
 		tryToGetFriends();
 
-		var tryToGetPicture = function() {
-			if (!Meteor.user() || !Meteor.user().services) {
-	    		setTimeout(tryToGetPicture, 500);
-	    		return;
-	    	}
-			Meteor.call('getPicture', {}, function(err, resp) {
-				if (!resp || !resp.data || !resp.data.url) {
-					setTimeout(tryToGetPicture, 500);
-					return;
-				}
-				that.userPicture = resp.data.url;
-			});
-		};
-		tryToGetPicture();
+		//var tryToGetPicture = function() {
+		//	if (!Meteor.user() || !Meteor.user().services) {
+	    //		setTimeout(tryToGetPicture, 500);
+	    //		return;
+	    //	}
+		//	Meteor.call('getPicture', {}, function(err, resp) {
+		//		if (!resp || !resp.data || !resp.data.url) {
+		//			setTimeout(tryToGetPicture, 500);
+		//			return;
+		//		}
+		//		that.userPicture = resp.data.url;
+		//	});
+		//};
+		//tryToGetPicture();
 
 		//this.myNoteText = this.getNote();
 

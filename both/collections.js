@@ -12,6 +12,12 @@ notesDB = Notes;
 lastReciprocatedDB = LastReciprocated;
 
 if (Meteor.isServer) {
+  Meteor.publish("userData", function () {
+    return UserData.find({meteorId: this.userId});
+  });
+  Meteor.publish("meteorUserData", function() {
+      return Meteor.users.find({_id: this.userId})
+  })
   Meteor.publish('relations', function publishRelations() {
     return Relations.find({
         senderMeteorId: this.userId
@@ -54,10 +60,4 @@ if (Meteor.isServer) {
   //    //return Notes.find({$or: [{"id": {$in: friends}}, {"meteorId":this.userId}]});
   //    return Notes.find({"id": {$in: friends}})
   //});
-  Meteor.publish("userData", function () {
-    return UserData.find({meteorId: this.userId});
-  });
-  Meteor.publish("meteorUserData", function() {
-      return Meteor.users.find({_id: this.userId})
-  })
 }

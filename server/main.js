@@ -137,7 +137,7 @@ function registerUser(userToRegister) {
     let allFriends = []
 
     let myDatum = {}
-    myDatum.picture = myInfo .picture;
+    myDatum.picture = myInfo.picture;
     myDatum.link = myInfo.link;
     myDatum.name = myInfo.name;
     myDatum.id = myInfo.id;
@@ -236,13 +236,13 @@ Meteor.methods({
         return doc["note"]
     },
 
-    getPicture : function() {
-    	return Meteor.wrapAsync(fbgraph.get)('me?fields=picture&access_token='+user.accessToken).picture
-    },
-    getMe : function({s}) {
-    	var result = Meteor.wrapAsync(fbgraph.get)('me' + s + "&access_token=" + user.accessToken)
-    	return result
-    },
+    //getPicture : function() {
+    //	return Meteor.wrapAsync(fbgraph.get)('me?fields=picture&access_token='+user.accessToken).picture
+    //},
+    //getMe : function({s}) {
+    //	var result = Meteor.wrapAsync(fbgraph.get)('me' + s + "&access_token=" + user.accessToken)
+    //	return result
+    //},
     addRelation : function({receiverId, type}) {
         let senderId = Meteor.user().services.facebook.id;
         let selector = {"senderId":senderId, "receiverId":receiverId, "type":type};
