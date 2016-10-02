@@ -77,7 +77,7 @@
 							<a ng-href="{{$ctrl.getUserLink()}}" target="_blank">
 								{{$ctrl.getUserName()}}
 							</a>
-					        <span class="md-caption" flex>{{$ctrl.getMyNote()}}</span>
+					        <span class="md-caption" flex>{{$ctrl.getUserData().note}}</span>
 						</span>
 					</span>
 
@@ -113,7 +113,7 @@
 							<a ng-href="{{friend.link}}" target="_blank">
 		                        {{friend.name}}
 							</a>
-					        <span class="md-caption">{{$ctrl.getNote(friend.id)}}</span>
+					        <span class="md-caption">{{friend.note}}</span>
 						</span>
 					</div>
 

@@ -37,22 +37,23 @@ if (Meteor.isServer) {
   //        senderId: senderId
   //    })
   //});
-  Meteor.publish('notes', function publishNotes() {
-      if (!this.userId) {
-          return this.ready()
-      }
-      var friendDocs = Friends.find({senderMeteorId: this.userId});
-      var friends = []
-      friendDocs.forEach(function(doc) {
-          friends.push(doc["id"])
-      })
-      var userdata = UserData.findOne({"meteorId":this.userId});
-      if (userdata) {
-          friends.push(userdata.id)
-      }
-      //return Notes.find({$or: [{"id": {$in: friends}}, {"meteorId":this.userId}]});
-      return Notes.find({"id": {$in: friends}})
-  });
+  //Meteor.publish('notes', function publishNotes() {
+  //    return notes.find({})
+  //    if (!this.userId) {
+  //        return this.ready()
+  //    }
+  //    var friendDocs = Friends.find({senderMeteorId: this.userId});
+  //    var friends = []
+  //    friendDocs.forEach(function(doc) {
+  //        friends.push(doc["id"])
+  //    })
+  //    var userdata = UserData.findOne({"meteorId":this.userId});
+  //    if (userdata) {
+  //        friends.push(userdata.id)
+  //    }
+  //    //return Notes.find({$or: [{"id": {$in: friends}}, {"meteorId":this.userId}]});
+  //    return Notes.find({"id": {$in: friends}})
+  //});
   Meteor.publish("userData", function () {
     return UserData.find({meteorId: this.userId});
   });
