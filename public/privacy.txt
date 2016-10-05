@@ -1,0 +1,17 @@
+When you log into reciprocity.io or interact with the app you should assume
+that we store everything you do. We also use the facebook API to get your
+photo, email address, and list of friends who use reciprocity.  The data is
+used to implement the app (e.g. to send notifications to you and to people
+with whom you match) and to calculate anonymized statistics like total number
+of users and total number of matches.  If you destroy your account we will try
+to immediately remove all of the interesting data about you, but we won't be
+able to remove you from all of the log files etc.; for all we know that stuff
+will stick around indefinitely.
+
+All of that data is stored unencrypted in our database, so we could look at it
+if we wanted to (as of October 1 there are two people who have credentials to access the
+database or deploy code to reciprocity.io). We promise not to.  We try to be
+basically sensible about security, but probably a sufficiently determined
+attacker could somehow get the data.
+
+We probably use cookies to keep track of the fact that you are logged in.
