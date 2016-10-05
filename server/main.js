@@ -121,8 +121,17 @@ function registerUser(userToRegister) {
 
     let user = userToRegister.services.facebook;
     let myInfo = Meteor.wrapAsync(fbgraph.get)('me?fields=email,name,picture,link&access_token='+user.accessToken);
-    let myUserData = UserData.findOne({"id":user.id})
+    let selector = {"id":user.id}
+    let doc = {
+        "id":user.id,
+        "email":myInfo.email,
+        "name":myInfo.name,
+        "meteorId":userToRegister._id,
+        "picture":myInfo.picture,
+    }
     let startTime = Date.now();
+    UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":startTime}});
+    let myUserData = UserData.findOne({"id":user.id})
     let registerFriend = function(selector, datum, startTime) {
         let toSet = {};
         Object.assign(toSet, selector);
@@ -168,9 +177,6 @@ function registerUser(userToRegister) {
                     selector["senderMeteorId"] = userToRegister._id;
                     selector["id"] = friendInfo.id;
 
-                    if (user.id == friendInfo.id){
-                        console.log("user:", user, "friendInfo:", friendInfo);
-                    }
                     registerFriend(selector, friendDatum, startTime)
 
                     let reciprocalSelector = {}
@@ -178,10 +184,6 @@ function registerUser(userToRegister) {
                     reciprocalSelector["senderMeteorId"] = friendUserData.meteorId;
                     reciprocalSelector["id"] = myInfo.id;
 
-                    if (reciprocalSelector.id == friendInfo.id){
-                        console.log("myInfo:", myInfo, "friendInfo:", friendInfo);
-
-                    }
                     registerFriend(reciprocalSelector, myDatum, startTime)
                 }
             }
@@ -192,15 +194,6 @@ function registerUser(userToRegister) {
         }));
     }
     getFriends('me/friends?limit=5000&fields=picture,name,link', true);
-    let selector = {"id":user.id}
-    let doc = {
-        "id":user.id,
-        "email":myInfo.email,
-        "name":myInfo.name,
-        "meteorId":userToRegister._id,
-        "picture":myInfo.picture,
-    }
-    UserData.upsert(selector, {$set: doc, $setOnInsert: {"joined":Date.now()}});
     return true;
 
 }
