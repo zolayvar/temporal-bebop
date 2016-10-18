@@ -52,6 +52,31 @@ md-dialog .md-dialog-content {
   z-index: 1;
 }
 
+.instructional-box {
+	background: rgba(0,0,0,.6);
+	text-align: center;
+	color:#eee;
+	font-size: 18px;
+	border-radius:5px;
+	margin-right:10px;
+	text-align:left;
+	padding: 10px;
+	padding-bottom: 15px;
+}
+
+.instructional-box .number {
+	background: #eee;
+	font-size:14px;
+	color: #666;
+	padding: 0 4px;
+	border-radius:100px;
+	margin-bottom: 4px;
+}
+
+.instructional-box img {
+	padding-top: 10px;
+}
+
 #root.not-logged-in::after {
 	background: url('giraffes.jpg');
 	height: 100%;

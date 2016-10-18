@@ -10,7 +10,7 @@
 				</div>
 			</div>
 		</md-toolbar>
-		<div style="text-align:center;background-opacity:.1" class="colored-row md-whiteframe-1dp">
+		<div style="text-align:center;" class="colored-row md-whiteframe-1dp">
 			<div class="md-whiteframe-1dp" layout-padding>
 				<div layout="column" layout-align="center center">
 					<div>
@@ -170,9 +170,68 @@
 
 	<div ng-if="!$ctrl.getUserName()" layout="column" layout-align="center center" style="height:100%;font-size:24px;">
 		<br><br>
-		<div class="md-whiteframe-1dp" style="background:#eee; width:70%; opacity:.6; text-align:center; border-radius:15px;" layout-padding>
+		<div class="md-whiteframe-1dp" style="background:rgba(1000,1000,1000,.6); width:70%; color:#555; text-align:center; border-radius:15px;" layout-padding>
 			<div style="font-size:8vw;font-weight:300;">reciprocity.io</div>
-			<div>Say which of your friends you want to do things with. We’ll tell you who reciprocates, and if someone doesn’t, we won't tell anyone.</div>
+			<div layout="column" layout-gt-sm="row" flex>
+				<div class="instructional-box" layout="column" layout-align="center center" flex="30">
+					<span><span class="number">1</span>&nbsp;You check boxes</span>
+					<img src="crop.jpg" style="width:180px; margin:auto">
+				</div>
+				<div class="instructional-box" flex="30">
+					Your friends check boxes
+				</div>
+				<div class="instructional-box" style="margin-right: 0;" flex="30">
+					We notify you when you match
+				</div>
+			</div>
+		</div>
+		<br>
+		<div style="background: white; font-size:14px; width:200px;">
+			<div class="colored-row" layout="row" layout-align="start center" style="padding:5px; padding-right: 0" flex>
+				<img src="steph.jpg" style="height:24px;">
+
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row" flex>
+					Alice
+				</span>
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row">
+					<md-checkbox ng-checked="false" style="width:26px;margin-right:5px"></md-checkbox>
+					<md-checkbox ng-checked="true" class="is-checked" style="width:26px;"></md-checkbox>
+				</span>
+			</div>
+			<div layout="row" layout-align="start center" style="padding:5px; padding-right: 0" flex>
+				<img src="paul.jpg" style="height:24px;"></img>
+
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row" flex>
+					Bob
+				</span>
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row">
+					<md-checkbox ng-checked="true" class="is-checked" style="width:26px;margin-right:5px"></md-checkbox>
+					<md-checkbox ng-checked="false" style="width:26px;"></md-checkbox>
+				</span>
+			</div>
+			<div class="colored-row" layout="row" layout-align="start center" style="padding:5px; padding-right: 0" flex>
+				<img src="katja.jpg" style="height:24px;"></img>
+
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row" flex>
+					Carol
+				</span>
+				&nbsp;&nbsp;&nbsp;
+
+				<span layout="row">
+					<md-checkbox ng-checked="false" style="width:26px;margin-right:5px"></md-checkbox>
+					<md-checkbox ng-checked="false" style="width:26px;"></md-checkbox>
+				</span>
+			</div>
 		</div>
 		<br><br><br>
 		<md-progress-circular md-mode="indeterminate"
