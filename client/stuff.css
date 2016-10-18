@@ -58,10 +58,10 @@ md-dialog .md-dialog-content {
 	color:#eee;
 	font-size: 18px;
 	border-radius:5px;
-	margin-right:10px;
 	text-align:left;
 	padding: 10px;
 	padding-bottom: 15px;
+	margin: 5px;
 }
 
 .instructional-box .number {
