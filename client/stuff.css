@@ -69,8 +69,9 @@ md-dialog .md-dialog-content {
 	font-size:14px;
 	color: #666;
 	padding: 0 4px;
+	height:16px;
 	border-radius:100px;
-	margin-bottom: 4px;
+	margin: 2px 0;
 }
 
 .instructional-box img {
